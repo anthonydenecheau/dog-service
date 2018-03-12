@@ -1,23 +1,36 @@
 package com.scc.enci.template;
 
-import java.sql.Timestamp;
+import io.swagger.annotations.ApiModelProperty;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.scc.enci.model.Pedigree;
+public class PedigreeObject {
 
-public class PedigreeObject extends Pedigree {
+	@ApiModelProperty(notes = "Pedigree country", position = 1, allowEmptyValue=true)
+	private String country;
 
-	private long id;
-	private int idDog;
-	private Timestamp timestamp;
-	
-	@JsonIgnore
-	public long getId() { return id; }
+	@ApiModelProperty(notes = "Pedigree type", position = 2, allowEmptyValue=true)
+	private String type;
 
-	@JsonIgnore
-	public int getIdDog() { return idDog; }
-	
-	@JsonIgnore
-	public Timestamp getTimestamp() { return timestamp; }
+	@ApiModelProperty(notes = "Pedigree number", position = 3, allowEmptyValue=true)
+	private String number;
+
+	@ApiModelProperty(notes = "Pedigree Date", position = 4, allowEmptyValue=true)
+	private String obtentionDate;
+
+	public String getType() { return type; }
+	public void setType(String type) { this.type = type; }
+
+	public String getNumber() { return number; }
+	public void setNumber(String number) { this.number= number; }
+
+	public String getCountry() { return country; }
+	public void setCountry(String country) { this.country = country; }
+
+	public String getObtentionDate() { return obtentionDate; }
+	public void setObtentionDate(String obtentionDate) { this.obtentionDate = obtentionDate; }
+
+	public PedigreeObject withType(String type){ this.setType(type); return this; }
+	public PedigreeObject withNumber(String number){ this.setNumber(number); return this; }
+	public PedigreeObject withCountry(String country){ this.setCountry(country); return this; }
+	public PedigreeObject withObtentionDate(String obtentionDate){ this.setObtentionDate(obtentionDate); return this; }
 
 }

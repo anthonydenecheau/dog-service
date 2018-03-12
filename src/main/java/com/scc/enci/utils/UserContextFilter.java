@@ -35,20 +35,25 @@ public class UserContextFilter implements Filter {
 
         HttpServletRequest httpServletRequest = (HttpServletRequest) servletRequest;
         UserContextHolder.getContext().setAuthentificationKey( httpServletRequest.getHeader(UserContext.AUTHENTICATION_KEY) );
-        logger.debug("Incoming Authentification key: {}", UserContextHolder.getContext().getAuthentificationKey());
-        
-        String authCredentials = UserContextHolder.getContext().getAuthentificationKey();
-        
-        if (authenticate(authCredentials)) {
-        	filterChain.doFilter(httpServletRequest, servletResponse);
-        } else {
-			if (servletResponse instanceof HttpServletResponse) {
-				HttpServletResponse httpServletResponse = (HttpServletResponse) servletResponse;
-				httpServletResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-				logger.error("Erreur d'authentification, clef fournie: {}", authCredentials);
+
+    	// Swagger Authentification disabled
+    	if (httpServletRequest.getRequestURL().toString().indexOf("api-docs")>0
+    		 || httpServletRequest.getRequestURL().toString().indexOf("swagger")>0) {
+    		filterChain.doFilter(httpServletRequest, servletResponse);
+    	} else {
+	        logger.debug("Incoming Authentification key: {}", UserContextHolder.getContext().getAuthentificationKey());
+	        String authCredentials = UserContextHolder.getContext().getAuthentificationKey();
+	
+	        if (authenticate(authCredentials)) {
+	        	filterChain.doFilter(httpServletRequest, servletResponse);
+	        } else {
+				if (servletResponse instanceof HttpServletResponse) {
+					HttpServletResponse httpServletResponse = (HttpServletResponse) servletResponse;
+					httpServletResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+					logger.error("Erreur d'authentification, clef fournie: {}", authCredentials);
+				}
 			}
-		}
-        
+    	}                
     }
 
     @Override

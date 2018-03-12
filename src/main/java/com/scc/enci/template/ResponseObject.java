@@ -3,22 +3,47 @@ package com.scc.enci.template;
 import java.util.List;
 import java.util.Map;
 
-import com.scc.enci.model.Breeder;
+import io.swagger.annotations.ApiModelProperty;
 
 public class ResponseObject {
 
+	@ApiModelProperty(notes = "Dog id", position = 1, allowEmptyValue=true)
 	private int id;
+	
+	@ApiModelProperty(notes = "Dog name", position = 2, allowEmptyValue=true)
 	private String name;
+
+	@ApiModelProperty(notes = "Dog gender", position = 3, allowEmptyValue=true)
 	private String gender;
+	
+	@ApiModelProperty(notes = "Dog Date of Birth", position = 4, allowEmptyValue=true)
 	private String birthDate;
+	
+	@ApiModelProperty(notes = "Dog Country of Birth", position = 5, allowEmptyValue=true)
 	private String birthCountry;
+	
+	@ApiModelProperty(notes = "Dog pedigrees", position = 6, allowEmptyValue=true)
 	private List<PedigreeObject> pedigrees;
+
+	@ApiModelProperty(dataType = "com.scc.enci.template.swaggerType.Token", notes = "Dog tokens (chip, tatoo)", position = 7, allowEmptyValue=true)
 	private List<Map<String, Object>> tokens;
+
+	@ApiModelProperty(notes = "Dog breed", position = 8, allowEmptyValue=true)
 	private BreedObject breed;	
+
+	@ApiModelProperty(dataType = "com.scc.enci.template.swaggerType.Father", notes = "Dog father", position = 9, allowEmptyValue=true)
 	private Map<String, Object> father;
+	
+	@ApiModelProperty(dataType = "com.scc.enci.template.swaggerType.Mother", notes = "Dog mother", position = 10, allowEmptyValue=true)
 	private Map<String, Object> mother;
+
+	@ApiModelProperty(notes = "Dog breeder", position = 11, allowEmptyValue=true)
 	private BreederObject breeder;
+
+	@ApiModelProperty(notes = "Dog owners", position = 12, allowEmptyValue=true)
 	private List<OwnerObject> owners;
+	
+	@ApiModelProperty(notes = "Dog titles", position = 13, allowEmptyValue=true)
 	private List<TitleObject> titles;
 	
 	public int getId() { return id; }

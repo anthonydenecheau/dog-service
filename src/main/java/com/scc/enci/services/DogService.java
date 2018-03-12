@@ -59,7 +59,7 @@ public class DogService {
 
     @Autowired
     ServiceConfig config;
-
+  
     public Dog getDogById(int dogId){
         Span newSpan = tracer.createSpan("getDogById");
         logger.debug("In the dogService.getDogById() call, trace id: {}", tracer.getCurrentSpan().traceIdString());
@@ -229,6 +229,7 @@ public class DogService {
     		
     		_b.withLastName(_breeder.getLastName())
     		  .withFirstName(_breeder.getFirstName())
+    		  .withOnSuffixe(_breeder.getOnSuffixe())
     		;
     		
     	} catch (Exception e) {

@@ -99,13 +99,27 @@
         <artifactId>spring-cloud-sleuth-zipkin</artifactId>
     </dependency>
       
+    <!-- swagger -->
+    <dependency>
+        <groupId>io.springfox</groupId>
+        <artifactId>springfox-swagger2</artifactId>
+        <version>${springfox-swagger.version}</version>
+    </dependency>
+
+    <dependency>
+        <groupId>io.springfox</groupId>
+        <artifactId>springfox-swagger-ui</artifactId>
+        <version>${springfox-swagger.version}</version>
+    </dependency>
+		              
   </dependencies>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <java.version>1.8</java.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <start-class>com.scc.enci.Application</start-class>
+	<springfox-swagger.version>2.8.0</springfox-swagger.version>    
+    <start-class>com.scc.enci.Application</start-class>    
     <docker.image.name>anthonydenecheau/scc-enci-service</docker.image.name>
     <docker.image.tag>version1.0</docker.image.tag>
   </properties>
