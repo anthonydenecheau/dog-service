@@ -10,9 +10,9 @@ public class ResponseObjectList<T> {
 	private int itemsCount;
 	
 	@ApiModelProperty(notes = "The list of dogs", position = 2, required = true, allowEmptyValue=true)
-	private List<ResponseObject> items;
+	private List<T> items;
 	
-	public ResponseObjectList(int itemsCount, List<ResponseObject> items) {
+	public ResponseObjectList(int itemsCount, List<T> items) {
 		super();
 		this.itemsCount = itemsCount;
 		this.items = items;
@@ -21,8 +21,8 @@ public class ResponseObjectList<T> {
 	public int getItemsCount() { return itemsCount; }
 	public void setItemsCount(int itemsCount) { this.itemsCount = itemsCount; }
 
-	public List<ResponseObject> getItems() { return items; }
-	public void setItems(List<ResponseObject> items) { this.items = items; }
+	public List<T> getItems() { return items; }
+	public void setItems(List<T> items) { this.items = items; }
 
 	public int size() { return this.items.size(); }
 	

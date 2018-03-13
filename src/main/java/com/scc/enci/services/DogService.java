@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.sleuth.Span;
 import org.springframework.cloud.sleuth.Tracer;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
@@ -17,11 +18,14 @@ import com.scc.enci.model.Title;
 import com.scc.enci.repository.DogRepository;
 import com.scc.enci.template.BreedObject;
 import com.scc.enci.template.BreederObject;
+import com.scc.enci.template.ChampionObject;
 import com.scc.enci.template.OwnerObject;
 import com.scc.enci.template.PedigreeObject;
-import com.scc.enci.template.ResponseObject;
+import com.scc.enci.template.DogObject;
 import com.scc.enci.template.ResponseObjectList;
 import com.scc.enci.template.TitleObject;
+
+import io.swagger.annotations.ApiParam;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -74,8 +78,8 @@ public class DogService {
 
     }
 
-    @HystrixCommand(fallbackMethod = "buildFallbackDogIdentifiant",
-            threadPoolKey = "dogByIdentifiantThreadPool",
+    @HystrixCommand(fallbackMethod = "buildFallbackDogList",
+            threadPoolKey = "dogByTokenThreadPool",
             threadPoolProperties =
                     {@HystrixProperty(name = "coreSize",value="30"),
                      @HystrixProperty(name="maxQueueSize", value="10")},
@@ -86,7 +90,7 @@ public class DogService {
                      @HystrixProperty(name="metrics.rollingStats.timeInMilliseconds", value="15000"),
                      @HystrixProperty(name="metrics.rollingStats.numBuckets", value="5")}
     )
-    public ResponseObjectList<ResponseObject> getDogByToken(String token){
+    public ResponseObjectList<DogObject> getDogByToken(String token){
 
         Span newSpan = tracer.createSpan("getDogByToken");
         logger.debug("In the dogService.getDogByToken() call, trace id: {}", tracer.getCurrentSpan().traceIdString());
@@ -101,8 +105,8 @@ public class DogService {
 	    	else
 	    		list = dogRepository.findByTranspondeur(token);
 	    
-	    	List<ResponseObject> results = new ArrayList<ResponseObject>();
-	    	ResponseObject result = new ResponseObject();
+	    	List<DogObject> results = new ArrayList<DogObject>();
+	    	DogObject result = new DogObject();
 	    	for (Dog _dog : list) {
 	    		
 	    		// Construction de la réponse
@@ -129,7 +133,7 @@ public class DogService {
 
 	    		results.add(result);
 	    	}
-	    	return new ResponseObjectList<ResponseObject>(results.size(),results);
+	    	return new ResponseObjectList<DogObject>(results.size(),results);
         }
 	    finally{
 	    	newSpan.tag("peer.service", "postgres");
@@ -328,13 +332,76 @@ public class DogService {
 
     }
     
-    private ResponseObjectList<ResponseObject> buildFallbackDogIdentifiant(String token){
+    private ResponseObjectList<DogObject> buildFallbackDogList(String token){
     	
-    	List<ResponseObject> list = new ArrayList<ResponseObject>(); 
-    	list.add(new ResponseObject()
+    	List<DogObject> list = new ArrayList<DogObject>(); 
+    	list.add(new DogObject()
                 .withId(0))
     	;
-        return new ResponseObjectList<ResponseObject>(list.size(),list);
+        return new ResponseObjectList<DogObject>(list.size(),list);
+    }
+    
+    @HystrixCommand(fallbackMethod = "buildFallbackChampionList",
+            threadPoolKey = "championChangeThreadPool",
+            threadPoolProperties =
+                    {@HystrixProperty(name = "coreSize",value="30"),
+                     @HystrixProperty(name="maxQueueSize", value="10")},
+            commandProperties={
+                     @HystrixProperty(name="circuitBreaker.requestVolumeThreshold", value="10"),
+                     @HystrixProperty(name="circuitBreaker.errorThresholdPercentage", value="75"),
+                     @HystrixProperty(name="circuitBreaker.sleepWindowInMilliseconds", value="7000"),
+                     @HystrixProperty(name="metrics.rollingStats.timeInMilliseconds", value="15000"),
+                     @HystrixProperty(name="metrics.rollingStats.numBuckets", value="5")}
+    )
+    public ResponseObjectList<ChampionObject> getChampionsChanges(String referenceDate) {
+
+        Span newSpan = tracer.createSpan("getChampionsChanges");
+        logger.debug("In the dogService.getChampionsChanges() call, trace id: {}", tracer.getCurrentSpan().traceIdString());
+        try {
+
+        	List<Title> list = new ArrayList<Title>(); 
+	    	list = titleService.findByObtentionDateGreaterThanEqual(referenceDate);
+	    
+	    	List<ChampionObject> results = new ArrayList<ChampionObject>();
+
+	    	ChampionObject result = new ChampionObject();
+	    	for (Title _title : list) {
+	    		
+	    		Dog _dog = dogRepository.findById(_title.getIdDog());
+	    				
+	    		if (_dog == null)
+	    			continue;
+	    		
+	    		// Construction de la réponse
+	    		result.withId(_dog.getId() )
+	    			.withPedigrees( searchPedigrees ( _dog.getId() ))
+	    			.withTokens( searchTokens ( _dog.getTatouage(), _dog.getTranspondeur()))
+	    			.withTitle(new TitleObject()
+	        				.withName(_title.getName())
+	        				.withCountry(_title.getCountry())
+	        				.withObtentionDate(_title.getObtentionDate())
+	        				.withTitle(_title.getTitle())
+	        				.withType(_title.getType()))
+	    		;
+	    		results.add(result);
+
+	    	}
+	    	return new ResponseObjectList<ChampionObject>(results.size(),results);
+        }
+	    finally{
+	    	newSpan.tag("peer.service", "postgres");
+	        newSpan.logEvent(org.springframework.cloud.sleuth.Span.CLIENT_RECV);
+	        tracer.close(newSpan);
+	    }
+    } 
+    
+    private ResponseObjectList<ChampionObject> buildFallbackChampionList(String referenceDate){
+    	
+    	List<ChampionObject> list = new ArrayList<ChampionObject>(); 
+    	list.add(new ChampionObject()
+                .withId(0))
+    	;
+        return new ResponseObjectList<ChampionObject>(list.size(),list);
     }
     
 }

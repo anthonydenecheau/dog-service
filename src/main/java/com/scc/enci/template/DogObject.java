@@ -5,7 +5,7 @@ import java.util.Map;
 
 import io.swagger.annotations.ApiModelProperty;
 
-public class ResponseObject {
+public class DogObject {
 
 	@ApiModelProperty(notes = "Dog id", position = 1, allowEmptyValue=true)
 	private int id;
@@ -85,18 +85,18 @@ public class ResponseObject {
 	public List<TitleObject> getTitles() { return titles; }
 	public void setTitles(List<TitleObject> titles) { this.titles = titles; }
 	
-	public ResponseObject withId(int id){ this.setId( id ); return this; }
-	public ResponseObject withName(String name){ this.setName( name ); return this; }
-	public ResponseObject withGender(String gender){ this.setGender( gender ); return this; }
-	public ResponseObject withBirthDate(String birthDate){ this.setBirthDate( birthDate ); return this; }
-	public ResponseObject withBirthCountry(String birthCountry){ this.setBirthCountry( birthCountry ); return this; }
-	public ResponseObject withTokens(List<Map<String, Object>> tokens){ this.setTokens(tokens); return this; }
-	public ResponseObject withPedigrees(List<PedigreeObject> pedigrees){ this.setPedigrees( pedigrees); return this; }
-	public ResponseObject withBreed(BreedObject breed){ this.setBreed( breed ); return this; }
-	public ResponseObject withFather(Map<String, Object> father){ this.setFather( father ); return this; }
-	public ResponseObject withMother(Map<String, Object> mother){ this.setMother( mother ); return this; }
-	public ResponseObject withBreeder(BreederObject breeder){ this.setBreeder( breeder ); return this; }
-	public ResponseObject withOwners(List<OwnerObject> owner){ this.setOwners( owner ); return this; }
-	public ResponseObject withTitles(List<TitleObject> titles){ this.setTitles( titles ); return this; }
+	public DogObject withId(int id){ this.setId( id ); return this; }
+	public DogObject withName(String name){ this.setName( name ); return this; }
+	public DogObject withGender(String gender){ this.setGender( gender ); return this; }
+	public DogObject withBirthDate(String birthDate){ this.setBirthDate( birthDate ); return this; }
+	public DogObject withBirthCountry(String birthCountry){ this.setBirthCountry( birthCountry ); return this; }
+	public DogObject withTokens(List<Map<String, Object>> tokens){ this.setTokens(tokens); return this; }
+	public DogObject withPedigrees(List<PedigreeObject> pedigrees){ this.setPedigrees( pedigrees); return this; }
+	public DogObject withBreed(BreedObject breed){ this.setBreed( breed ); return this; }
+	public DogObject withFather(Map<String, Object> father){ this.setFather( father ); return this; }
+	public DogObject withMother(Map<String, Object> mother){ this.setMother( mother ); return this; }
+	public DogObject withBreeder(BreederObject breeder){ this.setBreeder( breeder ); return this; }
+	public DogObject withOwners(List<OwnerObject> owner){ this.setOwners( owner ); return this; }
+	public DogObject withTitles(List<TitleObject> titles){ this.setTitles( titles ); return this; }
 
 }

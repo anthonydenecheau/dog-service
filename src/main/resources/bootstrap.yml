@@ -1,6 +1,6 @@
 spring:
   application:
-    name: enciservice
+    name: encidogservice
   profiles:
     active:
       default
