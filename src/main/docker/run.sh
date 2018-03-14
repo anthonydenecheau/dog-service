@@ -31,4 +31,4 @@ java -Djava.security.egd=file:/dev/./urandom -Dserver.port=$SERVER_PORT   \
      -Deureka.client.serviceUrl.defaultZone=$EUREKASERVER_URI             \
      -Dspring.cloud.config.uri=$CONFIGSERVER_URI                          \
      -Dspring.zipkin.baseUrl=$ZIPKIN_URI                                  \
-     -Dspring.profiles.active=$PROFILE -jar /usr/local/encidogservice/@project.build.finalName@.jar
+     -Dspring.profiles.active=$PROFILE -jar /usr/local/dogservice/@project.build.finalName@.jar
