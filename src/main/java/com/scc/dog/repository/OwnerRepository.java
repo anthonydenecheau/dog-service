@@ -12,4 +12,6 @@ public interface OwnerRepository extends CrudRepository<Owner,String>  {
 	public Owner findById(int id);
     public Owner findByIdDog(int idDog);
 
+    @Transactional
+    public void deleteByIdDog(int idDog);
 }

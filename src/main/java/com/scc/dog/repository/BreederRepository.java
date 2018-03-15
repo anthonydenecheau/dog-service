@@ -12,4 +12,7 @@ public interface BreederRepository extends CrudRepository<Breeder,String>  {
     public Breeder findById(int id);
     public Breeder findByIdDog(int idDog);
 
+
+    @Transactional
+    public void deleteByIdDog(int idDog);
 }

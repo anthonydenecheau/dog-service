@@ -27,6 +27,7 @@ import com.scc.dog.template.TitleObject;
 
 import io.swagger.annotations.ApiParam;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -404,4 +405,56 @@ public class DogService {
         return new ResponseObjectList<ChampionObject>(list.size(),list);
     }
     
+    public void save(Dog syncDog, Long timestamp){
+     	 
+    	try {
+	    	Dog dog = dogRepository.findById(syncDog.getId());
+	    	if (dog == null) {
+	    		logger.debug("Dog id {} not found", syncDog.getId());
+	    		syncDog
+	    			.withTimestamp(new Timestamp(timestamp))
+	    		;	    		
+	    		dogRepository.save(syncDog);
+	    	} else {
+	    		logger.debug("save dog id {}, {}, {}", dog.getId(), dog.getTimestamp().getTime(), timestamp);
+	    		if (dog.getTimestamp().getTime() < timestamp) {
+		    		logger.debug("check queue OK ; call saving changes ");
+		    		dog
+		    			.withNom(syncDog.getNom())
+		    			.withSexe(syncDog.getSexe())
+		    			.withAffixe(syncDog.getAffixe())
+		    			.withSexe(syncDog.getSexe())
+		    		    .withDateNaissance(syncDog.getDateNaissance())
+		    		    .withPays(syncDog.getPays())
+		    			.withTatouage(syncDog.getTatouage())
+		    			.withTranspondeur(syncDog.getTranspondeur())
+		    		    .withCodeFci(syncDog.getCodeFci())
+		    			.withIdRace(syncDog.getIdRace())
+		    			.withIdVariete(syncDog.getIdVariete())
+		    			.withRace(syncDog.getRace())
+		    			.withVariete(syncDog.getVariete())
+		    			.withCouleur(syncDog.getCouleur())
+		    			.withIdEtalon(syncDog.getIdEtalon())
+		    			.withIdLice(syncDog.getIdLice())
+		    			.withTimestamp(new Timestamp(timestamp))
+		    		;
+		    		
+	    			dogRepository.save(dog);
+	    		} else
+		    		logger.debug("check queue KO : no changes saved");
+
+	    	}
+    	} finally {
+    		
+    	}
+    }    
+
+    public void deleteById(int idDog){
+    	try {
+    		dogRepository.deleteById(idDog);
+    	} finally {
+    		
+    	}
+    }
+
 }

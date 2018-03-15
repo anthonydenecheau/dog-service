@@ -14,4 +14,6 @@ public interface PedigreeRepository extends CrudRepository<Pedigree,String>  {
 	public Pedigree findById(long id);
     public List<Pedigree> findByIdDog(int idDog);
 
+    @Transactional
+    public void deleteById(long id);
 }

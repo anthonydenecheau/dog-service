@@ -8,10 +8,8 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import io.swagger.annotations.ApiModelProperty;
-
 @Entity
-@Table(name = "ods_proprietaire")
+@Table(name = "ws_dog_proprietaire")
 public class Owner implements Serializable {
 
 	private static final long serialVersionUID = 1L;

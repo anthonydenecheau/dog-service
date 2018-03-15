@@ -10,5 +10,7 @@ import com.scc.dog.model.Parent;
 public interface ParentRepository extends CrudRepository<Parent,String>  {
 	
     public Parent findById(int id);
-
+    
+    @Transactional
+    public void deleteById(int id);
 }

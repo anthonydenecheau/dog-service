@@ -7,12 +7,8 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
-import io.swagger.annotations.ApiModelProperty;
-
 @Entity
-@Table(name = "ods_livres")
+@Table(name = "ws_dog_livres")
 public class Pedigree {
 
 	@Id

@@ -3,6 +3,37 @@ server:
   port: 8091
   
 spring:
+  cloud:
+    stream:
+      bindings:
+        inboundDogChanges:
+          destination: dogDogTopic
+          content-type: application/json
+          group: dogGroup
+        inboundOwnerChanges:
+          destination: ownerDogTopic
+          content-type: application/json
+          group: dogGroup
+        inboundBreederChanges:
+          destination: breederDogTopic
+          content-type: application/json
+          group: dogGroup
+        inboundTitleChanges:
+          destination:  titleDogTopic
+          content-type: application/json
+          group: dogGroup
+        inboundPedigreeChanges:
+          destination:  pedigreeDogTopic
+          content-type: application/json
+          group: dogGroup
+        inboundParentChanges:
+          destination:  parentDogTopic
+          content-type: application/json          
+          group: dogGroup
+      kafka:
+        binder:
+          zkNodes: localhost
+          brokers: localhost
   zipkin:
     baseUrl:  http://localhost:9411
 

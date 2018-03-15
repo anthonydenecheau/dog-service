@@ -1,5 +1,6 @@
 package com.scc.dog.services;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -52,4 +53,47 @@ public class TitleService {
           tracer.close(newSpan);
         }
     }
+    
+    public void save(Title syncTitle, Long timestamp){
+      	 
+    	try {
+    		Title title = titleRepository.findById(syncTitle.getId());
+	    	if (title == null) {
+	    		logger.debug("Title id {} not found", syncTitle.getId());
+	    		syncTitle
+	    			.withTimestamp(new Timestamp(timestamp))
+	    		;	    		
+	    		titleRepository.save(syncTitle);
+	    	} else {
+	    		logger.debug("save dog id {}, {}, {}", title.getId(), title.getTimestamp().getTime(), timestamp);
+	    		if (title.getTimestamp().getTime() < timestamp) {
+		    		logger.debug("check queue OK ; call saving changes ");
+		    		title
+		    			.withId(syncTitle.getId())
+		    			.withTitle(syncTitle.getTitle())
+		    			.withName(syncTitle.getName())
+		    		    .withType(syncTitle.getType())
+		    		    .withCountry(syncTitle.getCountry())
+		    			.withObtentionDate(syncTitle.getObtentionDate())
+		    			.withIdDog(syncTitle.getIdDog())
+		    			.withTimestamp(new Timestamp(timestamp))
+		    		;
+		    		
+		    		titleRepository.save(title);
+	    		} else
+		    		logger.debug("check queue KO : no changes saved");
+
+	    	}
+    	} finally {
+    		
+    	}
+    }
+    
+    public void deleteById(long id){
+    	try {
+    		titleRepository.deleteById(id);
+    	} finally {
+    		
+    	}
+    }    
 }

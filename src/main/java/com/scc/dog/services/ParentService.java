@@ -1,5 +1,7 @@
 package com.scc.dog.services;
 
+import java.sql.Timestamp;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,4 +41,44 @@ public class ParentService {
 
     }
     
+    public void save(Parent syncParent, Long timestamp){
+     	 
+    	try {
+    		Parent parent = parentRepository.findById(syncParent.getId());
+	    	if (parent == null) {
+	    		logger.debug("Dog id {} not found", syncParent.getId());
+	    		syncParent
+	    			.withTimestamp(new Timestamp(timestamp))
+	    		;	    		
+	    		parentRepository.save(syncParent);
+	    	} else {
+	    		logger.debug("save dog id {}, {}, {}", parent.getId(), parent.getTimestamp().getTime(), timestamp);
+	    		if (parent.getTimestamp().getTime() < timestamp) {
+		    		logger.debug("check queue OK ; call saving changes ");
+		    		parent
+		    			.withId(syncParent.getId())
+		    			.withName(syncParent.getName())
+		    		    .withAffixe(syncParent.getAffixe())
+		    		    .withOnSuffixe(syncParent.getOnSuffixe())
+		    			.withTimestamp(new Timestamp(timestamp))
+		    		;
+		    		
+		    		parentRepository.save(parent);
+	    		} else
+		    		logger.debug("check queue KO : no changes saved");
+
+	    	}
+    	} finally {
+    		
+    	}
+    }
+    
+    public void deleteById(int idDog){
+    	try {
+    		parentRepository.deleteById(idDog);
+    	} finally {
+    		
+    	}
+    }    
+
 }

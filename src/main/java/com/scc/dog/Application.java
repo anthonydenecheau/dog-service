@@ -5,10 +5,12 @@ import javax.servlet.Filter;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.circuitbreaker.EnableCircuitBreaker;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
 import org.springframework.cloud.sleuth.Sampler;
 import org.springframework.cloud.sleuth.sampler.AlwaysSampler;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
 
@@ -20,13 +22,15 @@ import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.service.ApiInfo;
 import springfox.documentation.spi.DocumentationType;
-import springfox.documentation.spring.web.paths.RelativePathProvider;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
+import static springfox.documentation.builders.PathSelectors.regex;
 
 @SpringBootApplication
 @EnableEurekaClient
 @EnableCircuitBreaker
+@RefreshScope
+@ComponentScan("com.scc")
 @EnableSwagger2
 public class Application extends WebMvcConfigurationSupport {
 
@@ -40,19 +44,35 @@ public class Application extends WebMvcConfigurationSupport {
     public Sampler defaultSampler() {
         return new AlwaysSampler();
     }
-    
+
     @Bean
-    public Docket api(){
+    public Docket dogApi2(){
         return new Docket(DocumentationType.SWAGGER_2)
+        		.groupName("dogservice-2.0")
         		.apiInfo(apiInfo())
                 .select()
-                .apis(RequestHandlerSelectors
+                	.apis(RequestHandlerSelectors
                         .basePackage("com.scc.dog.controllers"))
+                	.paths(regex("/v2.*"))
                 .apis(Predicates.not(RequestHandlerSelectors.basePackage("org.springframework.boot")))
                 .paths(PathSelectors.any())
                 .build();
     }
-    
+
+    @Bean
+    public Docket dogApi1(){
+        return new Docket(DocumentationType.SWAGGER_2)
+        		.groupName("dogservice-1.0")
+        		.apiInfo(apiInfo())
+                .select()
+                	.apis(RequestHandlerSelectors
+                        .basePackage("com.scc.dog.controllers"))
+                	.paths(regex("/v1.*"))
+                .apis(Predicates.not(RequestHandlerSelectors.basePackage("org.springframework.boot")))
+                .paths(PathSelectors.any())
+                .build();
+    }
+
     @Override
     protected void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("swagger-ui.html")

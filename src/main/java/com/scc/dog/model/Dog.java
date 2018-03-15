@@ -7,10 +7,8 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 @Entity
-@Table(name = "ods_chien")
+@Table(name = "ws_dog")
 public class Dog{
 
 	@Id
@@ -55,6 +53,9 @@ public class Dog{
 
 	@Column(name = "couleur")
 	private String couleur;
+
+	@Column(name = "couleur_abr")
+	private String couleurAbr;
 
 	@Column(name = "id_etalon")
 	private int idEtalon;
@@ -107,6 +108,9 @@ public class Dog{
 	public String getCouleur() { return couleur; }
 	public void setCouleur(String couleur) { this.couleur = couleur; }
 
+	public String getCouleurAbr() {return couleurAbr;}
+	public void setCouleurAbr(String couleurAbr) {this.couleurAbr = couleurAbr; }
+
 	public int getIdEtalon() { return idEtalon;}
 	public void setIdEtalon(int idEtalon) { this.idEtalon = idEtalon; }
 	
@@ -130,6 +134,7 @@ public class Dog{
 	public Dog withRace(String race){ this.setRace(race); return this; }
 	public Dog withVariete(String variete){ this.setVariete(variete); return this; }
 	public Dog withCouleur(String couleur){ this.setCouleur(couleur); return this; }
+	public Dog withCouleurAbr(String couleurAbr){ this.setCouleurAbr(couleurAbr); return this; }
 	public Dog withIdEtalon(int idEtalon){ this.setIdEtalon( idEtalon ); return this; }
 	public Dog withIdLice(int idLice){ this.setIdLice( idLice ); return this; }
 	public Dog withTimestamp(Timestamp timestamp){ this.setTimestamp(timestamp); return this; }
@@ -139,7 +144,7 @@ public class Dog{
 		return "Dog [id=" + id + ", nom=" + nom + ", affixe=" + affixe + ", sexe=" + sexe + ", dateNaissance="
 				+ dateNaissance + ", pays=" + pays + ", tatouage=" + tatouage + ", transpondeur=" + transpondeur
 				+ ", codeFci=" + codeFci + ", idRace=" + idRace + ", idVariete=" + idVariete + ", race=" + race
-				+ ", variete=" + variete + ", couleur=" + couleur + ", idEtalon=" + idEtalon + ", idLice=" + idLice
+				+ ", variete=" + variete + ", couleur=" + couleur + ", couleurAbr=" + couleurAbr + ", idEtalon=" + idEtalon + ", idLice=" + idLice
 				+ ", timestamp=" + timestamp + "]";
 	}
 	
