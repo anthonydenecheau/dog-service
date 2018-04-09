@@ -102,7 +102,7 @@ public class DogService {
 	    	String regex = "^[0-9]{15}$";
 	    	List<Dog> list = new ArrayList<Dog>(); 
 	    	if (!token.matches(regex))
-	    		list = dogRepository.findByTatouage(token);
+	    		list = dogRepository.findByTatouageIgnoreCase(token);
 	    	else
 	    		list = dogRepository.findByTranspondeur(token);
 	    
@@ -180,6 +180,9 @@ public class DogService {
     	String result = "";
     	
     	try {
+    		
+    		if (_onSuffixe == null)
+    			_onSuffixe = "O";
     		
     		if (_affixe != null && !"".equals(_affixe)) {
     			if (_onSuffixe.equals("O")) {
