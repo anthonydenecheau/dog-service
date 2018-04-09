@@ -12,13 +12,13 @@ public class BreedObject {
 	@ApiModelProperty(notes = "FCI Number", position = 2, allowEmptyValue=true)
 	private String fciNumber;
 
-	@ApiModelProperty(dataType = "com.scc.enci.template.swaggerType.BreedName", notes = "Breed name", position = 3, allowEmptyValue=true)
+	@ApiModelProperty(dataType = "com.scc.dog.template.swaggerType.BreedName", notes = "Breed name", position = 3, allowEmptyValue=true)
 	private Map<String, Object> name;
 
-	@ApiModelProperty(dataType = "com.scc.enci.template.swaggerType.BreedColor", notes = "Breed color", position = 4, allowEmptyValue=true)
+	@ApiModelProperty(dataType = "com.scc.dog.template.swaggerType.BreedColor", notes = "Breed color", position = 4, allowEmptyValue=true)
 	private Map<String, Object> color;
 
-	@ApiModelProperty(dataType = "com.scc.enci.template.swaggerType.BreedVariety", notes = "Breed variety", position = 5, allowEmptyValue=true)
+	@ApiModelProperty(dataType = "com.scc.dog.template.swaggerType.BreedVariety", notes = "Breed variety", position = 5, allowEmptyValue=true)
 	private Map<String, Object> variety;
 	
 	public int getId() {

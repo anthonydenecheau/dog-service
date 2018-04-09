@@ -13,7 +13,7 @@ public class ChampionObject {
 	@ApiModelProperty(notes = "Dog pedigrees", position = 2, allowEmptyValue=true)
 	private List<PedigreeObject> pedigrees;
 
-	@ApiModelProperty(dataType = "com.scc.enci.template.swaggerType.Token", notes = "Dog tokens (chip, tatoo)", position = 3, allowEmptyValue=true)
+	@ApiModelProperty(dataType = "com.scc.dog.template.swaggerType.Token", notes = "Dog tokens (chip, tatoo)", position = 3, allowEmptyValue=true)
 	private List<Map<String, Object>> tokens;
 
 	@ApiModelProperty(notes = "Dog title", position = 4, allowEmptyValue=true)

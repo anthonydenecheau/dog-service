@@ -25,16 +25,16 @@ public class DogObject {
 	@ApiModelProperty(notes = "Dog pedigrees", position = 6, allowEmptyValue=true)
 	private List<PedigreeObject> pedigrees;
 
-	@ApiModelProperty(dataType = "com.scc.enci.template.swaggerType.Token", notes = "Dog tokens (chip, tatoo)", position = 7, allowEmptyValue=true)
+	@ApiModelProperty(dataType = "com.scc.dog.template.swaggerType.Token", notes = "Dog tokens (chip, tatoo)", position = 7, allowEmptyValue=true)
 	private List<Map<String, Object>> tokens;
 
 	@ApiModelProperty(notes = "Dog breed", position = 8, allowEmptyValue=true)
 	private BreedObject breed;	
 
-	@ApiModelProperty(dataType = "com.scc.enci.template.swaggerType.Father", notes = "Dog father", position = 9, allowEmptyValue=true)
+	@ApiModelProperty(dataType = "com.scc.dog.template.swaggerType.Father", notes = "Dog father", position = 9, allowEmptyValue=true)
 	private Map<String, Object> father;
 	
-	@ApiModelProperty(dataType = "com.scc.enci.template.swaggerType.Mother", notes = "Dog mother", position = 10, allowEmptyValue=true)
+	@ApiModelProperty(dataType = "com.scc.dog.template.swaggerType.Mother", notes = "Dog mother", position = 10, allowEmptyValue=true)
 	private Map<String, Object> mother;
 
 	@ApiModelProperty(notes = "Dog breeder", position = 11, allowEmptyValue=true)
