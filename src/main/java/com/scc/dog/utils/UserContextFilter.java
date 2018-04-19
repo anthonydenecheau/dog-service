@@ -74,7 +74,7 @@ public class UserContextFilter implements Filter {
 			return ok;
 
 		// la clé transmise est-elle reconnue ?
-		// On conserve la position de la cé dans le tableau 
+		// On conserve la position de la clé dans le tableau 
 		int position = 0;
 		for (String _key : authenticate.getKeys()) {
 			position++;

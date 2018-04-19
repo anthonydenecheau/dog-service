@@ -11,7 +11,6 @@ import com.scc.dog.template.DogObject;
 import com.scc.dog.template.ResponseObjectList;
 
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
@@ -30,7 +29,7 @@ public class DogServiceController {
 	@Autowired
     private DogServiceV1 dogServiceV1;
 
-    @ApiOperation(value = "View dog information by token",response = DogObject.class)
+    @ApiOperation(value = "View dog information by token",response = ResponseObjectList.class)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Successfully retrieved dog"),
             @ApiResponse(code = 401, message = "You are not authorized to view the resource"),
@@ -43,7 +42,7 @@ public class DogServiceController {
         return dogService.getDogByToken(token);
     }    
 
-    @ApiOperation(value = "Return a list of dog that became champions from a certain date till now",response = ChampionObject.class)
+    @ApiOperation(value = "Return a list of dog that became champions from a certain date till now",response = ResponseObjectList.class)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Successfully retrieved dogs"),
             @ApiResponse(code = 401, message = "You are not authorized to view the resource"),

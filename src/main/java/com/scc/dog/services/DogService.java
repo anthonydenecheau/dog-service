@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.sleuth.Span;
 import org.springframework.cloud.sleuth.Tracer;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
 
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
@@ -13,7 +12,6 @@ import com.scc.dog.model.Breeder;
 import com.scc.dog.model.Dog;
 import com.scc.dog.model.Owner;
 import com.scc.dog.model.Parent;
-import com.scc.dog.model.Pedigree;
 import com.scc.dog.model.Title;
 import com.scc.dog.repository.DogRepository;
 import com.scc.dog.template.BreedObject;
@@ -25,13 +23,12 @@ import com.scc.dog.template.PedigreeObject;
 import com.scc.dog.template.ResponseObjectList;
 import com.scc.dog.template.TitleObject;
 
-import io.swagger.annotations.ApiParam;
-
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -107,11 +104,10 @@ public class DogService {
 	    		list = dogRepository.findByTranspondeur(token);
 	    
 	    	List<DogObject> results = new ArrayList<DogObject>();
-	    	DogObject result = new DogObject();
-	    	for (Dog _dog : list) {
-	    		
-	    		// Construction de la réponse
-	    		result.withId(_dog.getId() )
+	    	
+	    	results = list.stream()
+    		.map(_dog -> new DogObject()
+    				.withId(_dog.getId() )
 	    			.withGender( _dog.getSexe() )
 	    			.withBirthDate( _dog.getDateNaissance() )
 	    			.withBirthCountry( _dog.getPays() )
@@ -123,18 +119,21 @@ public class DogService {
 	    			.withBreeder( searchBreeder ( _dog.getId() ))
 	    			.withOwners( searchOwners ( _dog.getId() ))
 	    			.withTitles( searchTitles ( _dog.getId() ))
-	    		;
-	    		
-	    		// Lecture de l'éleveur pour afficher le nom complet du chien
-    			String _name = buildName (_dog.getNom()
-    					, _dog.getAffixe()
-    					, (result.getBreeder() == null ? "O" : result.getBreeder().getOnSuffixe())
-    			);
-	    		result.withName( _name );
+	    			.withNom( _dog.getNom() )
+	    			.withAffixe( _dog.getAffixe() )
+    		)
+    		.map(_dog-> {
+    			_dog.withName(
+    	    		buildName (_dog.getNom(), _dog.getAffixe(), (_dog.getBreeder() == null ? "O" : _dog.getBreeder().getOnSuffixe()) )
+    	    	);
+    			return _dog;
+    			}
+    		)
+    		.collect(Collectors.toList())
+    		;
+	    	
+	    	return new ResponseObjectList<DogObject>(results.size(),results);	    	
 
-	    		results.add(result);
-	    	}
-	    	return new ResponseObjectList<DogObject>(results.size(),results);
         }
 	    finally{
 	    	newSpan.tag("peer.service", "postgres");
@@ -249,7 +248,6 @@ public class DogService {
     private List<OwnerObject> searchOwners(int _id) {
     	
     	List<OwnerObject> _owners = new ArrayList<OwnerObject>();
-    	
     	try {
     		
     		Owner _owner = ownerService.getOwnerByIdDog( _id );
@@ -266,48 +264,38 @@ public class DogService {
     		
     	}
     	return _owners;
+
     }
 
     private List<TitleObject> searchTitles(int _id) {
-    	
-    	List<TitleObject> _titles = new ArrayList<TitleObject>();
-    	try {
-    		for (Title _title : titleService.getTitlesByIdDog( _id )) {
-    			_titles.add((TitleObject) new TitleObject()
-    				.withName(_title.getName())
-    				.withCountry(_title.getCountry())
-    				.withObtentionDate(_title.getObtentionDate())
-    				.withTitle(_title.getTitle())
-    				.withType(_title.getType())
-    			);
-    		}
-    			
-    	} catch (Exception e) {
-    		
-    	}
-    	return _titles;
-    	
+
+    	return titleService.getTitlesByIdDog( _id )
+    		.stream()
+    		.map(_title -> new TitleObject()
+				.withName(_title.getName())
+				.withCountry(_title.getCountry())
+				.withObtentionDate(_title.getObtentionDate())
+				.withTitle(_title.getTitle())
+				.withType(_title.getType())
+    		)
+    		.collect(Collectors.toList())
+		;
+
     }
     
     private List<PedigreeObject> searchPedigrees(int _id) {
-    	
-    	List<PedigreeObject> _pedigrees = new ArrayList<PedigreeObject>();
-    	
-    	try {
-    		for(Pedigree _pedigree : pedigreeService.getPedigreesByIdDog( _id )) {
-    			_pedigrees.add((PedigreeObject) new PedigreeObject()	
+
+    	return pedigreeService.getPedigreesByIdDog( _id )
+    		.stream()
+    		.map(_pedigree -> new PedigreeObject()
     				.withNumber(_pedigree.getNumber())
     				.withCountry(_pedigree.getCountry())
     				.withType(_pedigree.getType())
     				.withObtentionDate(_pedigree.getObtentionDate())
-    			);
-    		}
-    		
-    	} catch (Exception e) {
-    		
-    	}
-    	return _pedigrees;
-    	
+    		)
+    		.collect(Collectors.toList())
+		;
+
     }
     
     private List<Map<String, Object>> searchTokens (String _tattoo, String _chip) {
@@ -368,7 +356,6 @@ public class DogService {
 	    
 	    	List<ChampionObject> results = new ArrayList<ChampionObject>();
 
-	    	ChampionObject result = new ChampionObject();
 	    	for (Title _title : list) {
 	    		
 	    		Dog _dog = dogRepository.findById(_title.getIdDog());
@@ -377,19 +364,21 @@ public class DogService {
 	    			continue;
 	    		
 	    		// Construction de la réponse
-	    		result.withId(_dog.getId() )
-	    			.withPedigrees( searchPedigrees ( _dog.getId() ))
-	    			.withTokens( searchTokens ( _dog.getTatouage(), _dog.getTranspondeur()))
-	    			.withTitle(new TitleObject()
-	        				.withName(_title.getName())
-	        				.withCountry(_title.getCountry())
-	        				.withObtentionDate(_title.getObtentionDate())
-	        				.withTitle(_title.getTitle())
-	        				.withType(_title.getType()))
-	    		;
-	    		results.add(result);
+	    		results.add(
+	    			new ChampionObject()
+	    				.withId(_dog.getId() )
+		    			.withPedigrees( searchPedigrees ( _dog.getId() ))
+		    			.withTokens( searchTokens ( _dog.getTatouage(), _dog.getTranspondeur()))
+		    			.withTitle(new TitleObject()
+		        				.withName(_title.getName())
+		        				.withCountry(_title.getCountry())
+		        				.withObtentionDate(_title.getObtentionDate())
+		        				.withTitle(_title.getTitle())
+		        				.withType(_title.getType()))
+	    		);
 
 	    	}
+	    	
 	    	return new ResponseObjectList<ChampionObject>(results.size(),results);
         }
 	    finally{

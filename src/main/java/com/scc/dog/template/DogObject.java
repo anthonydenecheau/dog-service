@@ -3,6 +3,8 @@ package com.scc.dog.template;
 import java.util.List;
 import java.util.Map;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import io.swagger.annotations.ApiModelProperty;
 
 public class DogObject {
@@ -46,6 +48,12 @@ public class DogObject {
 	@ApiModelProperty(notes = "Dog titles", position = 13, allowEmptyValue=true)
 	private List<TitleObject> titles;
 	
+	@JsonIgnore
+	private String nom;
+	
+	@JsonIgnore
+	private String affixe;
+	
 	public int getId() { return id; }
 	public void setId(int id) { this.id = id; }
 	
@@ -84,7 +92,13 @@ public class DogObject {
 	
 	public List<TitleObject> getTitles() { return titles; }
 	public void setTitles(List<TitleObject> titles) { this.titles = titles; }
+
+	public String getNom() { return nom; }
+	public void setNom(String nom) { this.nom = nom; }
 	
+	public String getAffixe() { return affixe; }
+	public void setAffixe(String affixe) { this.affixe = affixe; }
+
 	public DogObject withId(int id){ this.setId( id ); return this; }
 	public DogObject withName(String name){ this.setName( name ); return this; }
 	public DogObject withGender(String gender){ this.setGender( gender ); return this; }
@@ -98,5 +112,7 @@ public class DogObject {
 	public DogObject withBreeder(BreederObject breeder){ this.setBreeder( breeder ); return this; }
 	public DogObject withOwners(List<OwnerObject> owner){ this.setOwners( owner ); return this; }
 	public DogObject withTitles(List<TitleObject> titles){ this.setTitles( titles ); return this; }
+	public DogObject withNom(String nom){ this.setNom( nom ); return this; }
+	public DogObject withAffixe(String affixe){ this.setAffixe( affixe ); return this; }
 
 }
