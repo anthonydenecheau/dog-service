@@ -318,7 +318,7 @@ public class DogService {
     		}
 
     	} catch (Exception e) {
-    		
+    		logger.error("searchTokens: tattoo {}, chip {}, error {}",_tattoo,_chip, e.getMessage());
     	}
     	return tokens;
 
@@ -349,16 +349,20 @@ public class DogService {
 
         Span newSpan = tracer.createSpan("getChampionsChanges");
         logger.debug("In the dogService.getChampionsChanges() call, trace id: {}", tracer.getCurrentSpan().traceIdString());
-        try {
+        
 
-        	List<Title> list = new ArrayList<Title>(); 
+    	List<Title> list = new ArrayList<Title>(); 
+    	List<ChampionObject> results = new ArrayList<ChampionObject>();
+    	Dog _dog = null;
+
+    	try {
+
 	    	list = titleService.findByObtentionDateGreaterThanEqual(referenceDate);
 	    
-	    	List<ChampionObject> results = new ArrayList<ChampionObject>();
-
 	    	for (Title _title : list) {
 	    		
-	    		Dog _dog = dogRepository.findById(_title.getIdDog());
+	    		if (_title.getIdDog() > 0)
+	    			_dog = dogRepository.findById(_title.getIdDog());
 	    				
 	    		if (_dog == null)
 	    			continue;
@@ -376,16 +380,23 @@ public class DogService {
 		        				.withTitle(_title.getTitle())
 		        				.withType(_title.getType()))
 	    		);
+	    		
+	    		_dog = null;
 
 	    	}
 	    	
-	    	return new ResponseObjectList<ChampionObject>(results.size(),results);
+        } 
+        catch (Exception e) {
+        	logger.error("In the dogService.getChampionsChanges() call, trace id: {}, error {}", tracer.getCurrentSpan().traceIdString(), e.getMessage());
         }
 	    finally{
 	    	newSpan.tag("peer.service", "postgres");
 	        newSpan.logEvent(org.springframework.cloud.sleuth.Span.CLIENT_RECV);
 	        tracer.close(newSpan);
 	    }
+        
+    	return new ResponseObjectList<ChampionObject>(results.size(),results);
+
     } 
     
     private ResponseObjectList<ChampionObject> buildFallbackChampionList(String referenceDate){

@@ -78,7 +78,7 @@ public class Title {
 	
 	@Override
 	public String toString() {
-		return "Title [id=" + id + ", idDog=" + idDog + ", title=" + title + ", name=" + name + ", type=" + type
+		return "Title [id=" + id + ", idDog=" + idDog + ", idTitle=" + idTitle + ", title=" + title + ", name=" + name + ", type=" + type
 				+ ", country=" + country + ", obtentionDate=" + obtentionDate + ", timestamp=" + timestamp + "]";
 	}
 	
