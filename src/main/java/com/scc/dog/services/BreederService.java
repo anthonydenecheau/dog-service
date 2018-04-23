@@ -57,13 +57,14 @@ public class BreederService {
 		    		logger.debug("check queue OK ; call saving changes ");
 		    		breeder
 		    			.withId(syncBreeder.getId())
-		    			.withFirstName(syncBreeder.getFirstName())
 		    			.withLastName(syncBreeder.getLastName())
-		    			.withIdDog(syncBreeder.getIdDog())
+		    			.withFirstName(syncBreeder.getFirstName())
 		    		    .withTypeProfil(syncBreeder.getTypeProfil())
 		    		    .withProfessionnelActif(syncBreeder.getProfessionnelActif())
 		    			.withRaisonSociale(syncBreeder.getRaisonSociale())
 		    			.withOnSuffixe(syncBreeder.getOnSuffixe())
+		    			.withPays(syncBreeder.getPays())
+		    			.withIdDog(syncBreeder.getIdDog())
 		    			.withTimestamp(new Timestamp(timestamp))
 		    		;
 		    		

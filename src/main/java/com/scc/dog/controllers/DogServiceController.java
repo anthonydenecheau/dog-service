@@ -40,7 +40,20 @@ public class DogServiceController {
     public ResponseObjectList<DogObject> getDogByToken( 
     		@ApiParam(value = "token (chip or tatoo)", required = true) @PathVariable("token") String token) {
         return dogService.getDogByToken(token);
-    }    
+    }   
+    
+    @ApiOperation(value = "View dog information by id",response = DogObject.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successfully retrieved dog"),
+            @ApiResponse(code = 401, message = "You are not authorized to view the resource"),
+            @ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
+            @ApiResponse(code = 404, message = "The resource you were trying to reach is not found")
+    })    
+    @RequestMapping(value="/v2/dogs/{id}",method = RequestMethod.GET)
+    public DogObject getDogById( 
+    		@ApiParam(value = "Dog id", required = true) @PathVariable("id") int id) {
+        return dogService.getDogById(id);
+    }  
 
     @ApiOperation(value = "Return a list of dog that became champions from a certain date till now",response = ResponseObjectList.class)
     @ApiResponses(value = {
@@ -76,7 +89,7 @@ public class DogServiceController {
             @ApiResponse(code = 404, message = "The resource you were trying to reach is not found")
     })    
     @RequestMapping(value="/v1/dogs/{id}",method = RequestMethod.GET)
-    public com.scc.dog.template.v1.DogObject getDogById( 
+    public com.scc.dog.template.v1.DogObject getDogByIdV1( 
     		@ApiParam(value = "Dog id", required = true) @PathVariable("id") int id) {
         return dogServiceV1.getDogById(id);
     }      

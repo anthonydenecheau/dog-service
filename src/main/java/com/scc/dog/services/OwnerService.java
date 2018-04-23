@@ -57,8 +57,8 @@ public class OwnerService {
 		    		logger.debug("check queue OK ; call saving changes ");
 		    		owner
 		    			.withId(syncOwner.getId())
-		    			.withFirstName(syncOwner.getFirstName())
 		    			.withLastName(syncOwner.getLastName())
+		    			.withFirstName(syncOwner.getFirstName())
 		    		    .withAddress(syncOwner.getAddress())
 		    		    .withZipCode(syncOwner.getZipCode())
 		    			.withTown(syncOwner.getTown())

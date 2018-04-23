@@ -70,12 +70,13 @@ public class TitleService {
 		    		logger.debug("check queue OK ; call saving changes ");
 		    		title
 		    			.withId(syncTitle.getId())
+		    			.withIdDog(syncTitle.getIdDog())
+		    			.withIdTitle(syncTitle.getIdTitle())
 		    			.withTitle(syncTitle.getTitle())
 		    			.withName(syncTitle.getName())
 		    		    .withType(syncTitle.getType())
 		    		    .withCountry(syncTitle.getCountry())
 		    			.withObtentionDate(syncTitle.getObtentionDate())
-		    			.withIdDog(syncTitle.getIdDog())
 		    			.withTimestamp(new Timestamp(timestamp))
 		    		;
 		    		

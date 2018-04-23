@@ -12,7 +12,6 @@ import com.scc.dog.model.Breeder;
 import com.scc.dog.model.Dog;
 import com.scc.dog.model.Owner;
 import com.scc.dog.model.Parent;
-import com.scc.dog.model.Title;
 import com.scc.dog.repository.DogRepository;
 import com.scc.dog.template.BreedObject;
 import com.scc.dog.template.BreederObject;
@@ -28,10 +27,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import java.util.function.Function;
+import java.util.function.Predicate;
 
 @Service
 public class DogService {
@@ -62,11 +64,41 @@ public class DogService {
     @Autowired
     ServiceConfig config;
   
-    public Dog getDogById(int dogId){
+    public DogObject getDogById(int dogId){
         Span newSpan = tracer.createSpan("getDogById");
         logger.debug("In the dogService.getDogById() call, trace id: {}", tracer.getCurrentSpan().traceIdString());
+        
+        DogObject _response = new DogObject();
+        
         try {
-        	return dogRepository.findById(dogId);
+        	Dog _dog = new Dog();
+        	_dog = dogRepository.findById(dogId);
+        	
+        	if (_dog == null ) {
+        		return _response.withId(0);
+        	} else {
+	        	 _response
+    				.withId(_dog.getId() )
+	    			.withGender( _dog.getSexe() )
+	    			.withBirthDate( _dog.getDateNaissance() )
+	    			.withBirthCountry( _dog.getPays() )
+	    			.withPedigrees( searchPedigrees ( _dog.getId() ))
+	    			.withTokens( searchTokens ( _dog.getTatouage(), _dog.getTranspondeur()))
+	    			.withBreed( searchBreed(_dog))
+	    			.withFather( ( _dog.getIdEtalon() == 0 ? null : searchParent( _dog.getIdEtalon()) ))
+	    			.withMother( ( _dog.getIdLice() == 0 ? null : searchParent( _dog.getIdLice()) ))
+	    			.withBreeder( searchBreeder ( _dog.getId() ))
+	    			.withOwners( searchOwners ( _dog.getId() ))
+	    			.withTitles( searchTitles ( _dog.getId() ))
+	    			.withNom( _dog.getNom() )
+	    			.withAffixe( _dog.getAffixe() )
+	    		;
+	        	_response.withName(
+	    	    		buildName (_response.getNom(), _response.getAffixe(), (_response.getBreeder() == null ? "O" : _response.getBreeder().getOnSuffixe()) )
+	    	    );
+        	}
+        	
+        	return _response;
         }
         finally{
           newSpan.tag("peer.service", "postgres");
@@ -75,6 +107,7 @@ public class DogService {
         }
 
     }
+
 
     @HystrixCommand(fallbackMethod = "buildFallbackDogList",
             threadPoolKey = "dogByTokenThreadPool",
@@ -148,7 +181,7 @@ public class DogService {
     	
     	try  {
     		
-	    	_breed.setId( _dog.getIdVariete() );
+	    	_breed.setId( _dog.getIdRace() );
 	    	_breed.setFciNumber( _dog.getCodeFci() );
 	    	
 	    	if (_dog.getRace() != null) {
@@ -165,6 +198,7 @@ public class DogService {
 	
 	    	if (_dog.getVariete() != null) {
 		    	Map<String, Object> _variete = new HashMap<String, Object>();
+		    	_variete.put("id", _dog.getIdVariete() );
 		    	_variete.put("fr", _dog.getVariete() );
 		    	_breed.setVariety( _variete );
 	    	}
@@ -236,6 +270,7 @@ public class DogService {
     		
     		_b.withLastName(_breeder.getLastName())
     		  .withFirstName(_breeder.getFirstName())
+    		  .withCountry(_breeder.getPays())
     		  .withOnSuffixe(_breeder.getOnSuffixe())
     		;
     		
@@ -308,13 +343,13 @@ public class DogService {
     		if (_tattoo != null && !"".equals(_tattoo) ) {
     			token.put("type", "tattoo");
     			token.put("number", _tattoo);
-    			tokens.add(new HashMap(token));
+    			tokens.add(new HashMap<String, Object>(token));
     		}
     		token.clear();
     		if (_chip != null && !"".equals(_chip) ) {
     			token.put("type", "chip");
     			token.put("number", _chip);
-    			tokens.add(new HashMap(token));
+    			tokens.add(new HashMap<String, Object>(token));
     		}
 
     	} catch (Exception e) {
@@ -324,8 +359,11 @@ public class DogService {
 
     }
     
-    private ResponseObjectList<DogObject> buildFallbackDogList(String token){
-    	
+    @SuppressWarnings("unused")
+	private ResponseObjectList<DogObject> buildFallbackDogList(String token){
+
+    	logger.debug("In the dogService.buildFallbackDogList() call");
+
     	List<DogObject> list = new ArrayList<DogObject>(); 
     	list.add(new DogObject()
                 .withId(0))
@@ -350,41 +388,20 @@ public class DogService {
         Span newSpan = tracer.createSpan("getChampionsChanges");
         logger.debug("In the dogService.getChampionsChanges() call, trace id: {}", tracer.getCurrentSpan().traceIdString());
         
-
-    	List<Title> list = new ArrayList<Title>(); 
     	List<ChampionObject> results = new ArrayList<ChampionObject>();
-    	Dog _dog = null;
 
     	try {
 
-	    	list = titleService.findByObtentionDateGreaterThanEqual(referenceDate);
-	    
-	    	for (Title _title : list) {
-	    		
-	    		if (_title.getIdDog() > 0)
-	    			_dog = dogRepository.findById(_title.getIdDog());
-	    				
-	    		if (_dog == null)
-	    			continue;
-	    		
-	    		// Construction de la réponse
-	    		results.add(
-	    			new ChampionObject()
-	    				.withId(_dog.getId() )
-		    			.withPedigrees( searchPedigrees ( _dog.getId() ))
-		    			.withTokens( searchTokens ( _dog.getTatouage(), _dog.getTranspondeur()))
-		    			.withTitle(new TitleObject()
-		        				.withName(_title.getName())
-		        				.withCountry(_title.getCountry())
-		        				.withObtentionDate(_title.getObtentionDate())
-		        				.withTitle(_title.getTitle())
-		        				.withType(_title.getType()))
-	    		);
-	    		
-	    		_dog = null;
+    		// Lecture des id distinct
+    		results = titleService.findByObtentionDateGreaterThanEqual(referenceDate)
+	    		.stream()
+        		.map(_title -> new ChampionObject()
+        				.withId(_title.getIdDog())
+            		)
+        		.filter(distinctByKey(p -> p.getId()))
+           		.collect(Collectors.toList())
+            ;
 
-	    	}
-	    	
         } 
         catch (Exception e) {
         	logger.error("In the dogService.getChampionsChanges() call, trace id: {}, error {}", tracer.getCurrentSpan().traceIdString(), e.getMessage());
@@ -399,8 +416,17 @@ public class DogService {
 
     } 
     
-    private ResponseObjectList<ChampionObject> buildFallbackChampionList(String referenceDate){
+    public static <T> Predicate<T> distinctByKey(Function<? super T, Object> keyExtractor)
+    {
+        Map<Object, Boolean> map = new ConcurrentHashMap<>();
+        return t -> map.putIfAbsent(keyExtractor.apply(t), Boolean.TRUE) == null;
+    }
+    
+    @SuppressWarnings("unused")
+	private ResponseObjectList<ChampionObject> buildFallbackChampionList(String referenceDate){
     	
+        logger.debug("In the dogService.buildFallbackChampionList() call");
+        
     	List<ChampionObject> list = new ArrayList<ChampionObject>(); 
     	list.add(new ChampionObject()
                 .withId(0))
@@ -424,7 +450,6 @@ public class DogService {
 		    		logger.debug("check queue OK ; call saving changes ");
 		    		dog
 		    			.withNom(syncDog.getNom())
-		    			.withSexe(syncDog.getSexe())
 		    			.withAffixe(syncDog.getAffixe())
 		    			.withSexe(syncDog.getSexe())
 		    		    .withDateNaissance(syncDog.getDateNaissance())
@@ -437,6 +462,7 @@ public class DogService {
 		    			.withRace(syncDog.getRace())
 		    			.withVariete(syncDog.getVariete())
 		    			.withCouleur(syncDog.getCouleur())
+		    			.withCouleurAbr(syncDog.getCouleurAbr())
 		    			.withIdEtalon(syncDog.getIdEtalon())
 		    			.withIdLice(syncDog.getIdLice())
 		    			.withTimestamp(new Timestamp(timestamp))

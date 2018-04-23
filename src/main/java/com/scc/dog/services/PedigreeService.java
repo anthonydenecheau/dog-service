@@ -58,11 +58,11 @@ public class PedigreeService {
 		    		logger.debug("check queue OK ; call saving changes ");
 		    		pedigree
 		    			.withId(syncPedigree.getId())
+		    			.withIdDog(syncPedigree.getIdDog())
+		    		    .withCountry(syncPedigree.getCountry())
 		    			.withType(syncPedigree.getType())
 		    			.withNumber(syncPedigree.getNumber())
-		    		    .withCountry(syncPedigree.getCountry())
 		    		    .withObtentionDate(syncPedigree.getObtentionDate())
-		    			.withIdDog(syncPedigree.getIdDog())
 		    			.withTimestamp(new Timestamp(timestamp))
 		    		;
 		    		
