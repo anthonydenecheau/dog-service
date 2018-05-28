@@ -1,9 +1,12 @@
 package com.scc.dog.controllers;
 
+import java.time.Instant;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.scc.dog.model.Dog;
 import com.scc.dog.services.DogService;
 import com.scc.dog.services.v1.DogServiceV1;
 import com.scc.dog.template.ChampionObject;
@@ -17,11 +20,14 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.http.HttpStatus;
 
 @RestController
 @Api(value="dog selection", description="Return information about dog")
-public class DogServiceController {
+public class DogController {
    
 	@Autowired
     private DogService dogService;
@@ -93,5 +99,23 @@ public class DogServiceController {
     		@ApiParam(value = "Dog id", required = true) @PathVariable("id") int id) {
         return dogServiceV1.getDogById(id);
     }      
+    
+    @RequestMapping(value="/v2/dogs/{id}",method = RequestMethod.PUT)
+    public void updateDog( @PathVariable("id") int id, @RequestBody Dog dog) {
+    	Instant instant = Instant.now();
+    	dogService.save(dog, instant.toEpochMilli());
+    }
+
+    @RequestMapping(value="/v2/dogs/",method = RequestMethod.POST)
+    public void saveDog(@RequestBody Dog dog) {
+    	Instant instant = Instant.now();
+    	dogService.save(dog, instant.toEpochMilli());
+    }
+
+    @RequestMapping(value="/v2/dogs/{id}",method = RequestMethod.DELETE)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteDog( @PathVariable("id") int id) {
+    	dogService.deleteById(id);
+    }
  
 }

@@ -57,6 +57,7 @@ public class BreederService {
 		    		logger.debug("check queue OK ; call saving changes ");
 		    		breeder
 		    			.withId(syncBreeder.getId())
+		    			.withCivility(syncBreeder.getCivility())
 		    			.withLastName(syncBreeder.getLastName())
 		    			.withFirstName(syncBreeder.getFirstName())
 		    		    .withTypeProfil(syncBreeder.getTypeProfil())

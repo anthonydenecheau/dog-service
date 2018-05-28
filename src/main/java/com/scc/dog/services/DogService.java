@@ -85,8 +85,8 @@ public class DogService {
 	    			.withPedigrees( searchPedigrees ( _dog.getId() ))
 	    			.withTokens( searchTokens ( _dog.getTatouage(), _dog.getTranspondeur()))
 	    			.withBreed( searchBreed(_dog))
-	    			.withFather( ( _dog.getIdEtalon() == 0 ? null : searchParent( _dog.getIdEtalon()) ))
-	    			.withMother( ( _dog.getIdLice() == 0 ? null : searchParent( _dog.getIdLice()) ))
+	    			.withFather( searchParent( _dog.getIdEtalon(), _dog.getInscriptionCode()))
+	    			.withMother( searchParent( _dog.getIdLice(), _dog.getInscriptionCode()))
 	    			.withBreeder( searchBreeder ( _dog.getId() ))
 	    			.withOwners( searchOwners ( _dog.getId() ))
 	    			.withTitles( searchTitles ( _dog.getId() ))
@@ -147,8 +147,8 @@ public class DogService {
 	    			.withPedigrees( searchPedigrees ( _dog.getId() ))
 	    			.withTokens( searchTokens ( _dog.getTatouage(), _dog.getTranspondeur()))
 	    			.withBreed( searchBreed(_dog))
-	    			.withFather( ( _dog.getIdEtalon() == 0 ? null : searchParent( _dog.getIdEtalon()) ))
-	    			.withMother( ( _dog.getIdLice() == 0 ? null : searchParent( _dog.getIdLice()) ))
+	    			.withFather( searchParent( _dog.getIdEtalon(), _dog.getInscriptionCode()))
+	    			.withMother( searchParent( _dog.getIdLice(), _dog.getInscriptionCode()))
 	    			.withBreeder( searchBreeder ( _dog.getId() ))
 	    			.withOwners( searchOwners ( _dog.getId() ))
 	    			.withTitles( searchTitles ( _dog.getId() ))
@@ -234,16 +234,26 @@ public class DogService {
     	return result;
     }
     
-    private HashMap<String, Object> searchParent (int _id) {
+    private HashMap<String, Object> searchParent (int _id, String _inscription) {
     	
     	HashMap<String, Object> _info = new HashMap<String, Object>();
     	Parent _parent = new Parent();
     	
     	try {
-    		
-    		_parent = parentService.getParentById(_id);
-    		_info.put("name",buildName(_parent.getName(), _parent.getAffixe(), _parent.getOnSuffixe()));
-
+    	
+    		/*
+    		*  le géniteur n'est pas renseigné, on regarde le type d'inscription du sujet
+    		*  Si le type d'inscription = A TITRE INITIAL, on le remonte dans les infos géniteurs
+    		*/    		
+    		if (_id ==0) {
+    			if (_inscription.equals("A TITRE INITIAL"))
+    	    		_info.put("name","TI");
+    			else
+    				_info=null;
+    		} else {
+	    		_parent = parentService.getParentById(_id);
+	    		_info.put("name",buildName(_parent.getName(), _parent.getAffixe(), _parent.getOnSuffixe()));
+    		}
     	} catch (Exception e) {
     		
     	}
@@ -259,16 +269,18 @@ public class DogService {
     		_breeder = breederService.getBreederByIdDog( _id );
     		/*
     		 * Gestion de la règle particulier / eleveur (professionnel)
-    		 * La raison sociale remplace le nom de l'éleveur; le prénom est réinitialisé. 
+    		 * La raison sociale remplace le nom de l'éleveur; le prénom et la civilité sont réinitialisés. 
     		 */
     		if (_breeder.getTypeProfil().equals("E") 
     			&& _breeder.getProfessionnelActif().equals("O")
     			&& (_breeder.getRaisonSociale()!=null && !"".equals(_breeder.getRaisonSociale()) )) {
     			_breeder.setLastName(_breeder.getRaisonSociale());
     			_breeder.setFirstName("");
+    			_breeder.setCivility("");
     		}
     		
-    		_b.withLastName(_breeder.getLastName())
+    		_b.withCivility(_breeder.getCivility())
+    		  .withLastName(_breeder.getLastName())
     		  .withFirstName(_breeder.getFirstName())
     		  .withCountry(_breeder.getPays())
     		  .withOnSuffixe(_breeder.getOnSuffixe())
@@ -463,6 +475,7 @@ public class DogService {
 		    			.withVariete(syncDog.getVariete())
 		    			.withCouleur(syncDog.getCouleur())
 		    			.withCouleurAbr(syncDog.getCouleurAbr())
+		    			.withInscriptionCode(syncDog.getInscriptionCode())
 		    			.withIdEtalon(syncDog.getIdEtalon())
 		    			.withIdLice(syncDog.getIdLice())
 		    			.withTimestamp(new Timestamp(timestamp))
