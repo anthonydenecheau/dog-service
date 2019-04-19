@@ -7,10 +7,10 @@ import org.springframework.transaction.annotation.Transactional;
 import com.scc.dog.model.Parent;
 
 @Repository
-public interface ParentRepository extends CrudRepository<Parent,String>  {
-	
-    public Parent findById(int id);
-    
-    @Transactional
-    public void deleteById(int id);
+public interface ParentRepository extends CrudRepository<Parent, String> {
+
+   public Parent findById(int id);
+
+   @Transactional
+   public void deleteById(int id);
 }

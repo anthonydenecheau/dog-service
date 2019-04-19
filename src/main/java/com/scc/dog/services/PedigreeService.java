@@ -17,71 +17,64 @@ import com.scc.dog.repository.PedigreeRepository;
 @Service
 public class PedigreeService {
 
-    private static final Logger logger = LoggerFactory.getLogger(PedigreeService.class);
+   private static final Logger logger = LoggerFactory.getLogger(PedigreeService.class);
 
-    @Autowired
-    private Tracer tracer;
+   @Autowired
+   private Tracer tracer;
 
-    @Autowired
-    private PedigreeRepository pedigreeRepository;
-    
-    @Autowired
-    ServiceConfig config;
+   @Autowired
+   private PedigreeRepository pedigreeRepository;
 
-    public List<Pedigree> getPedigreesByIdDog(int dogId){
-        Span newSpan = tracer.createSpan("getPedigreesByIdDog");
-        logger.debug("In the breederService.getPedigreesByIdDog call, trace id: {}", tracer.getCurrentSpan().traceIdString());
-        try {
-        	return pedigreeRepository.findByIdDog(dogId);
-        }
-        finally{
-          newSpan.tag("peer.service", "postgres");
-          newSpan.logEvent(org.springframework.cloud.sleuth.Span.CLIENT_RECV);
-          tracer.close(newSpan);
-        }
+   @Autowired
+   ServiceConfig config;
 
-    }
-    
-    public void save(Pedigree syncPedigree, Long timestamp){
-   	 
-    	try {
-    		Pedigree pedigree = pedigreeRepository.findById(syncPedigree.getId());
-	    	if (pedigree == null) {
-	    		logger.debug("Dog id {} not found", syncPedigree.getId());
-	    		syncPedigree
-	    			.withTimestamp(new Timestamp(timestamp))
-	    		;	    		
-	    		pedigreeRepository.save(syncPedigree);
-	    	} else {
-	    		logger.debug("save dog id {}, {}, {}", pedigree.getId(), pedigree.getTimestamp().getTime(), timestamp);
-	    		if (pedigree.getTimestamp().getTime() < timestamp) {
-		    		logger.debug("check queue OK ; call saving changes ");
-		    		pedigree
-		    			.withId(syncPedigree.getId())
-		    			.withIdDog(syncPedigree.getIdDog())
-		    		    .withCountry(syncPedigree.getCountry())
-		    			.withType(syncPedigree.getType())
-		    			.withNumber(syncPedigree.getNumber())
-		    		    .withObtentionDate(syncPedigree.getObtentionDate())
-		    			.withTimestamp(new Timestamp(timestamp))
-		    		;
-		    		
-		    		pedigreeRepository.save(pedigree);
-	    		} else
-		    		logger.debug("check queue KO : no changes saved");
+   public List<Pedigree> getPedigreesByIdDog(int dogId) {
+      Span newSpan = tracer.createSpan("getPedigreesByIdDog");
+      logger.debug("In the breederService.getPedigreesByIdDog call, trace id: {}",
+            tracer.getCurrentSpan().traceIdString());
+      try {
+         return pedigreeRepository.findByIdDog(dogId);
+      } finally {
+         newSpan.tag("peer.service", "postgres");
+         newSpan.logEvent(org.springframework.cloud.sleuth.Span.CLIENT_RECV);
+         tracer.close(newSpan);
+      }
 
-	    	}
-    	} finally {
-    		
-    	}
-    }    
-    
-    public void deleteById(long id){
-    	try {
-    		pedigreeRepository.deleteById(id);
-    	} finally {
-    		
-    	}
-    }
+   }
+
+   public void save(Pedigree syncPedigree, Long timestamp) {
+
+      try {
+         Pedigree pedigree = pedigreeRepository.findById(syncPedigree.getId());
+         if (pedigree == null) {
+            logger.debug("Dog id {} not found", syncPedigree.getId());
+            syncPedigree.withTimestamp(new Timestamp(timestamp));
+            pedigreeRepository.save(syncPedigree);
+         } else {
+            logger.debug("save dog id {}, {}, {}", pedigree.getId(), pedigree.getTimestamp().getTime(), timestamp);
+            if (pedigree.getTimestamp().getTime() < timestamp) {
+               logger.debug("check queue OK ; call saving changes ");
+               pedigree.withId(syncPedigree.getId()).withIdDog(syncPedigree.getIdDog())
+                     .withCountry(syncPedigree.getCountry()).withType(syncPedigree.getType())
+                     .withNumber(syncPedigree.getNumber()).withObtentionDate(syncPedigree.getObtentionDate())
+                     .withTimestamp(new Timestamp(timestamp));
+
+               pedigreeRepository.save(pedigree);
+            } else
+               logger.debug("check queue KO : no changes saved");
+
+         }
+      } finally {
+
+      }
+   }
+
+   public void deleteById(long id) {
+      try {
+         pedigreeRepository.deleteById(id);
+      } finally {
+
+      }
+   }
 
 }

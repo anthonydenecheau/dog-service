@@ -17,26 +17,25 @@ import com.scc.dog.services.OwnerService;
 @RestController
 public class OwnerController {
 
-	@Autowired
-    private OwnerService ownerService;
-	
-	
-    @RequestMapping(value="/v2/owners/dog/{dogId}",method = RequestMethod.PUT)
-    public void updateOwner( @PathVariable("dogId") int id, @RequestBody Owner owner) {
-    	Instant instant = Instant.now();
-    	ownerService.save(owner, instant.toEpochMilli());
-    }
+   @Autowired
+   private OwnerService ownerService;
 
-    @RequestMapping(value="/v2/owners/",method = RequestMethod.POST)
-    public void saveOwner(@RequestBody Owner owner) {
-    	Instant instant = Instant.now();
-    	ownerService.save(owner, instant.toEpochMilli());
-    }
+   @RequestMapping(value = "/v2/owners/dog/{dogId}", method = RequestMethod.PUT)
+   public void updateOwner(@PathVariable("dogId") int id, @RequestBody Owner owner) {
+      Instant instant = Instant.now();
+      ownerService.save(owner, instant.toEpochMilli());
+   }
 
-    @RequestMapping(value="/v2/owners/dog/{dogId}",method = RequestMethod.DELETE)
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteOwner( @PathVariable("dogId") int dogId) {
-    	ownerService.deleteByIdDog(dogId);
-    }
-    
+   @RequestMapping(value = "/v2/owners/", method = RequestMethod.POST)
+   public void saveOwner(@RequestBody Owner owner) {
+      Instant instant = Instant.now();
+      ownerService.save(owner, instant.toEpochMilli());
+   }
+
+   @RequestMapping(value = "/v2/owners/dog/{dogId}", method = RequestMethod.DELETE)
+   @ResponseStatus(HttpStatus.NO_CONTENT)
+   public void deleteOwner(@PathVariable("dogId") int dogId) {
+      ownerService.deleteByIdDog(dogId);
+   }
+
 }

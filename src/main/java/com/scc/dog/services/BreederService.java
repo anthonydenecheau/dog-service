@@ -16,76 +16,67 @@ import com.scc.dog.repository.BreederRepository;
 @Service
 public class BreederService {
 
-    private static final Logger logger = LoggerFactory.getLogger(BreederService.class);
+   private static final Logger logger = LoggerFactory.getLogger(BreederService.class);
 
-    @Autowired
-    private Tracer tracer;
+   @Autowired
+   private Tracer tracer;
 
-    @Autowired
-    private BreederRepository breederRepository;
-    
-    @Autowired
-    ServiceConfig config;
+   @Autowired
+   private BreederRepository breederRepository;
 
-    public Breeder getBreederByIdDog(int dogId){
-        Span newSpan = tracer.createSpan("getBreederByIdDog");
-        logger.debug("In the breederService.getBreederByIdDog() call, trace id: {}", tracer.getCurrentSpan().traceIdString());
-        try {
-        	return breederRepository.findByIdDog(dogId);
-        }
-        finally{
-          newSpan.tag("peer.service", "postgres");
-          newSpan.logEvent(org.springframework.cloud.sleuth.Span.CLIENT_RECV);
-          tracer.close(newSpan);
-        }
+   @Autowired
+   ServiceConfig config;
 
-    }
-    
-    public void save(Breeder syncBreeder, Long timestamp){
-    	 
-    	try {
-	    	Breeder breeder = breederRepository.findByIdDog(syncBreeder.getIdDog());
-	    	if (breeder == null) {
-	    		logger.debug("Dog id {} not found", syncBreeder.getId());
-	    		syncBreeder
-	    			.withTimestamp(new Timestamp(timestamp))
-	    		;	    		
-	    		breederRepository.save(syncBreeder);
-	    	} else {
-	    		logger.debug("save dog id {}, {}, {}", breeder.getId(), breeder.getTimestamp().getTime(), timestamp);
-	    		if (breeder.getTimestamp().getTime() < timestamp) {
-		    		logger.debug("check queue OK ; call saving changes ");
-		    		breeder
-		    			.withId(syncBreeder.getId())
-		    			.withCivility(syncBreeder.getCivility())
-		    			.withLastName(syncBreeder.getLastName())
-		    			.withFirstName(syncBreeder.getFirstName())
-		    		    .withTypeProfil(syncBreeder.getTypeProfil())
-		    		    .withProfessionnelActif(syncBreeder.getProfessionnelActif())
-		    			.withRaisonSociale(syncBreeder.getRaisonSociale())
-		    			.withOnSuffixe(syncBreeder.getOnSuffixe())
-		    			.withPays(syncBreeder.getPays())
-		    			.withIdDog(syncBreeder.getIdDog())
-		    			.withTimestamp(new Timestamp(timestamp))
-		    		;
-		    		
-		    		breederRepository.save(breeder);
-	    		} else
-		    		logger.debug("check queue KO : no changes saved");
+   public Breeder getBreederByIdDog(int dogId) {
+      Span newSpan = tracer.createSpan("getBreederByIdDog");
+      logger.debug("In the breederService.getBreederByIdDog() call, trace id: {}",
+            tracer.getCurrentSpan().traceIdString());
+      try {
+         return breederRepository.findByIdDog(dogId);
+      } finally {
+         newSpan.tag("peer.service", "postgres");
+         newSpan.logEvent(org.springframework.cloud.sleuth.Span.CLIENT_RECV);
+         tracer.close(newSpan);
+      }
 
-	    	}
-    	} finally {
-    		
-    	}
-    }    
-    
-    public void deleteByIdDog(int idDog){
-    	try {
-    		breederRepository.deleteByIdDog(idDog);
-    	} finally {
-    		
-    	}
-    }
-    
-    
+   }
+
+   public void save(Breeder syncBreeder, Long timestamp) {
+
+      try {
+         Breeder breeder = breederRepository.findByIdDog(syncBreeder.getIdDog());
+         if (breeder == null) {
+            logger.debug("Dog id {} not found", syncBreeder.getId());
+            syncBreeder.withTimestamp(new Timestamp(timestamp));
+            breederRepository.save(syncBreeder);
+         } else {
+            logger.debug("save dog id {}, {}, {}", breeder.getId(), breeder.getTimestamp().getTime(), timestamp);
+            if (breeder.getTimestamp().getTime() < timestamp) {
+               logger.debug("check queue OK ; call saving changes ");
+               breeder.withId(syncBreeder.getId()).withCivility(syncBreeder.getCivility())
+                     .withLastName(syncBreeder.getLastName()).withFirstName(syncBreeder.getFirstName())
+                     .withTypeProfil(syncBreeder.getTypeProfil())
+                     .withProfessionnelActif(syncBreeder.getProfessionnelActif())
+                     .withRaisonSociale(syncBreeder.getRaisonSociale()).withOnSuffixe(syncBreeder.getOnSuffixe())
+                     .withPays(syncBreeder.getPays()).withIdDog(syncBreeder.getIdDog())
+                     .withTimestamp(new Timestamp(timestamp));
+
+               breederRepository.save(breeder);
+            } else
+               logger.debug("check queue KO : no changes saved");
+
+         }
+      } finally {
+
+      }
+   }
+
+   public void deleteByIdDog(int idDog) {
+      try {
+         breederRepository.deleteByIdDog(idDog);
+      } finally {
+
+      }
+   }
+
 }

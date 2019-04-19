@@ -4,10 +4,15 @@ import io.swagger.annotations.ApiModelProperty;
 
 public class BreedColor {
 
-	@ApiModelProperty(notes = "Iso code country property", position = 1, allowEmptyValue=true)
-	private String fr;
+   @ApiModelProperty(notes = "Iso code country property", position = 1, allowEmptyValue = true)
+   private String fr;
 
-	public String getFr() { return fr; }
-	public void setName(String fr) { this.fr = fr; }
+   public String getFr() {
+      return fr;
+   }
+
+   public void setName(String fr) {
+      this.fr = fr;
+   }
 
 }

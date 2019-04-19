@@ -8,20 +8,20 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
 @Component
-@ConfigurationProperties(prefix="authentification")
+@ConfigurationProperties(prefix = "authentification")
 public class AuthenticateConfig {
 
-	@Value("${authentification.value}")
-	private String value;
-	
-	private List<String> keys = new ArrayList<String>();
+   @Value("${authentification.value}")
+   private String value;
 
-	public List<String> getKeys() {
-		return this.keys;
-	}
+   private List<String> keys = new ArrayList<String>();
 
-	public String getValue() {
-		return this.value;
-	}
+   public List<String> getKeys() {
+      return this.keys;
+   }
+
+   public String getValue() {
+      return this.value;
+   }
 
 }

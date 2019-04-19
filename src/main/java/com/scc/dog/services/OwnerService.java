@@ -16,73 +16,65 @@ import com.scc.dog.repository.OwnerRepository;
 @Service
 public class OwnerService {
 
-    private static final Logger logger = LoggerFactory.getLogger(OwnerService.class);
+   private static final Logger logger = LoggerFactory.getLogger(OwnerService.class);
 
-    @Autowired
-    private Tracer tracer;
+   @Autowired
+   private Tracer tracer;
 
-    @Autowired
-    private OwnerRepository ownerRepository;
-    
-    @Autowired
-    ServiceConfig config;
+   @Autowired
+   private OwnerRepository ownerRepository;
 
-    public Owner getOwnerByIdDog(int dogId){
-        Span newSpan = tracer.createSpan("getOwnerByIdDog");
-        logger.debug("In the breederService.getOwnerByIdDog() call, trace id: {}", tracer.getCurrentSpan().traceIdString());
-        try {
-        	return ownerRepository.findByIdDog(dogId);
-        }
-        finally{
-          newSpan.tag("peer.service", "postgres");
-          newSpan.logEvent(org.springframework.cloud.sleuth.Span.CLIENT_RECV);
-          tracer.close(newSpan);
-        }
+   @Autowired
+   ServiceConfig config;
 
-    }
-    
-    public void save(Owner syncOwner, Long timestamp){
-   	 
-    	try {
-	    	Owner owner = ownerRepository.findByIdDog(syncOwner.getIdDog());
-	    	if (owner == null) {
-	    		logger.debug("Dog id {} not found", syncOwner.getId());
-	    		syncOwner
-	    			.withTimestamp(new Timestamp(timestamp))
-	    		;	    		
-	    		ownerRepository.save(syncOwner);
-	    	} else {
-	    		logger.debug("save dog id {}, {}, {}", owner.getId(), owner.getTimestamp().getTime(), timestamp);
-	    		if (owner.getTimestamp().getTime() < timestamp) {
-		    		logger.debug("check queue OK ; call saving changes ");
-		    		owner
-		    			.withId(syncOwner.getId())
-		    			.withLastName(syncOwner.getLastName())
-		    			.withFirstName(syncOwner.getFirstName())
-		    		    .withAddress(syncOwner.getAddress())
-		    		    .withZipCode(syncOwner.getZipCode())
-		    			.withTown(syncOwner.getTown())
-		    			.withCountry(syncOwner.getCountry())
-		    			.withIdDog(syncOwner.getIdDog())
-		    			.withTimestamp(new Timestamp(timestamp))
-		    		;
-		    		
-		    		ownerRepository.save(owner);
-	    		} else
-		    		logger.debug("check queue KO : no changes saved");
+   public Owner getOwnerByIdDog(int dogId) {
+      Span newSpan = tracer.createSpan("getOwnerByIdDog");
+      logger.debug("In the breederService.getOwnerByIdDog() call, trace id: {}",
+            tracer.getCurrentSpan().traceIdString());
+      try {
+         return ownerRepository.findByIdDog(dogId);
+      } finally {
+         newSpan.tag("peer.service", "postgres");
+         newSpan.logEvent(org.springframework.cloud.sleuth.Span.CLIENT_RECV);
+         tracer.close(newSpan);
+      }
 
-	    	}
-    	} finally {
-    		
-    	}
-    }
-    
-    public void deleteByIdDog(int idDog){
-    	try {
-    		ownerRepository.deleteByIdDog(idDog);
-    	} finally {
-    		
-    	}
-    }
-    
+   }
+
+   public void save(Owner syncOwner, Long timestamp) {
+
+      try {
+         Owner owner = ownerRepository.findByIdDog(syncOwner.getIdDog());
+         if (owner == null) {
+            logger.debug("Dog id {} not found", syncOwner.getId());
+            syncOwner.withTimestamp(new Timestamp(timestamp));
+            ownerRepository.save(syncOwner);
+         } else {
+            logger.debug("save dog id {}, {}, {}", owner.getId(), owner.getTimestamp().getTime(), timestamp);
+            if (owner.getTimestamp().getTime() < timestamp) {
+               logger.debug("check queue OK ; call saving changes ");
+               owner.withId(syncOwner.getId()).withLastName(syncOwner.getLastName())
+                     .withFirstName(syncOwner.getFirstName()).withAddress(syncOwner.getAddress())
+                     .withZipCode(syncOwner.getZipCode()).withTown(syncOwner.getTown())
+                     .withCountry(syncOwner.getCountry()).withIdDog(syncOwner.getIdDog())
+                     .withTimestamp(new Timestamp(timestamp));
+
+               ownerRepository.save(owner);
+            } else
+               logger.debug("check queue KO : no changes saved");
+
+         }
+      } finally {
+
+      }
+   }
+
+   public void deleteByIdDog(int idDog) {
+      try {
+         ownerRepository.deleteByIdDog(idDog);
+      } finally {
+
+      }
+   }
+
 }

@@ -17,26 +17,25 @@ import com.scc.dog.services.TitleService;
 @RestController
 public class TitleController {
 
-	@Autowired
-    private TitleService titleService;
-	
-	
-    @RequestMapping(value="/v2/titles/{id}",method = RequestMethod.PUT)
-    public void updateTitle( @PathVariable("id") long id, @RequestBody Title title) {
-    	Instant instant = Instant.now();
-    	titleService.save(title, instant.toEpochMilli());
-    }
+   @Autowired
+   private TitleService titleService;
 
-    @RequestMapping(value="/v2/titles/",method = RequestMethod.POST)
-    public void saveTitle(@RequestBody Title title) {
-    	Instant instant = Instant.now();
-    	titleService.save(title, instant.toEpochMilli());
-    }
+   @RequestMapping(value = "/v2/titles/{id}", method = RequestMethod.PUT)
+   public void updateTitle(@PathVariable("id") long id, @RequestBody Title title) {
+      Instant instant = Instant.now();
+      titleService.save(title, instant.toEpochMilli());
+   }
 
-    @RequestMapping(value="/v2/titles/{id}",method = RequestMethod.DELETE)
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteTitle( @PathVariable("id") long id) {
-    	titleService.deleteById(id);
-    }
-    
+   @RequestMapping(value = "/v2/titles/", method = RequestMethod.POST)
+   public void saveTitle(@RequestBody Title title) {
+      Instant instant = Instant.now();
+      titleService.save(title, instant.toEpochMilli());
+   }
+
+   @RequestMapping(value = "/v2/titles/{id}", method = RequestMethod.DELETE)
+   @ResponseStatus(HttpStatus.NO_CONTENT)
+   public void deleteTitle(@PathVariable("id") long id) {
+      titleService.deleteById(id);
+   }
+
 }

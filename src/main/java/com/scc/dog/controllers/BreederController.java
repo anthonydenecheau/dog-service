@@ -17,26 +17,25 @@ import com.scc.dog.services.BreederService;
 @RestController
 public class BreederController {
 
-	@Autowired
-    private BreederService breederService;
-	
-	
-    @RequestMapping(value="/v2/breeders/dog/{dogId}",method = RequestMethod.PUT)
-    public void updateBreeder( @PathVariable("dogId") int id, @RequestBody Breeder breeder) {
-    	Instant instant = Instant.now();
-    	breederService.save(breeder, instant.toEpochMilli());
-    }
+   @Autowired
+   private BreederService breederService;
 
-    @RequestMapping(value="/v2/breeders/",method = RequestMethod.POST)
-    public void saveBreeder(@RequestBody Breeder breeder) {
-    	Instant instant = Instant.now();
-    	breederService.save(breeder, instant.toEpochMilli());
-    }
+   @RequestMapping(value = "/v2/breeders/dog/{dogId}", method = RequestMethod.PUT)
+   public void updateBreeder(@PathVariable("dogId") int id, @RequestBody Breeder breeder) {
+      Instant instant = Instant.now();
+      breederService.save(breeder, instant.toEpochMilli());
+   }
 
-    @RequestMapping(value="/v2/breeders/dog/{dogId}",method = RequestMethod.DELETE)
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteBreeder( @PathVariable("dogId") int dogId) {
-    	breederService.deleteByIdDog(dogId);
-    }
-    
+   @RequestMapping(value = "/v2/breeders/", method = RequestMethod.POST)
+   public void saveBreeder(@RequestBody Breeder breeder) {
+      Instant instant = Instant.now();
+      breederService.save(breeder, instant.toEpochMilli());
+   }
+
+   @RequestMapping(value = "/v2/breeders/dog/{dogId}", method = RequestMethod.DELETE)
+   @ResponseStatus(HttpStatus.NO_CONTENT)
+   public void deleteBreeder(@PathVariable("dogId") int dogId) {
+      breederService.deleteByIdDog(dogId);
+   }
+
 }

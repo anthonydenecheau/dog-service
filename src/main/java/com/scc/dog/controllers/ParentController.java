@@ -17,26 +17,25 @@ import com.scc.dog.services.ParentService;
 @RestController
 public class ParentController {
 
-	@Autowired
-    private ParentService parentService;
-	
-	
-    @RequestMapping(value="/v2/parents/{id}",method = RequestMethod.PUT)
-    public void updateParent( @PathVariable("id") int id, @RequestBody Parent parent) {
-    	Instant instant = Instant.now();
-    	parentService.save(parent, instant.toEpochMilli());
-    }
+   @Autowired
+   private ParentService parentService;
 
-    @RequestMapping(value="/v2/parents/",method = RequestMethod.POST)
-    public void saveParent(@RequestBody Parent parent) {
-    	Instant instant = Instant.now();
-    	parentService.save(parent, instant.toEpochMilli());
-    }
+   @RequestMapping(value = "/v2/parents/{id}", method = RequestMethod.PUT)
+   public void updateParent(@PathVariable("id") int id, @RequestBody Parent parent) {
+      Instant instant = Instant.now();
+      parentService.save(parent, instant.toEpochMilli());
+   }
 
-    @RequestMapping(value="/v2/parents/{id}",method = RequestMethod.DELETE)
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteParent( @PathVariable("id") int id) {
-    	parentService.deleteById(id);
-    }
-    
+   @RequestMapping(value = "/v2/parents/", method = RequestMethod.POST)
+   public void saveParent(@RequestBody Parent parent) {
+      Instant instant = Instant.now();
+      parentService.save(parent, instant.toEpochMilli());
+   }
+
+   @RequestMapping(value = "/v2/parents/{id}", method = RequestMethod.DELETE)
+   @ResponseStatus(HttpStatus.NO_CONTENT)
+   public void deleteParent(@PathVariable("id") int id) {
+      parentService.deleteById(id);
+   }
+
 }

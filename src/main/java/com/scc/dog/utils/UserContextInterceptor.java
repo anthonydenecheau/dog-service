@@ -11,15 +11,15 @@ import org.springframework.http.client.ClientHttpResponse;
 import java.io.IOException;
 
 public class UserContextInterceptor implements ClientHttpRequestInterceptor {
-    private static final Logger logger = LoggerFactory.getLogger(UserContextInterceptor.class);
-    @Override
-    public ClientHttpResponse intercept(
-            HttpRequest request, byte[] body, ClientHttpRequestExecution execution)
-            throws IOException {
+   private static final Logger logger = LoggerFactory.getLogger(UserContextInterceptor.class);
 
-        HttpHeaders headers = request.getHeaders();
-        headers.add(UserContext.AUTHENTICATION_KEY, UserContextHolder.getContext().getAuthentificationKey());
+   @Override
+   public ClientHttpResponse intercept(HttpRequest request, byte[] body, ClientHttpRequestExecution execution)
+         throws IOException {
 
-        return execution.execute(request, body);
-    }
+      HttpHeaders headers = request.getHeaders();
+      headers.add(UserContext.AUTHENTICATION_KEY, UserContextHolder.getContext().getAuthentificationKey());
+
+      return execution.execute(request, body);
+   }
 }

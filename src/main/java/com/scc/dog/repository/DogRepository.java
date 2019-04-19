@@ -10,11 +10,13 @@ import com.scc.dog.model.Dog;
 
 @Repository
 public interface DogRepository extends CrudRepository<Dog, String> {
-	
-    public Dog findById(int id);
-    public List<Dog> findByTatouageIgnoreCase(String toutage);
-    public List<Dog> findByTranspondeur(String transpondeur);
-    
-    @Transactional
-    public void deleteById(int id);
+
+   public Dog findById(int id);
+
+   public List<Dog> findByTatouageIgnoreCase(String toutage);
+
+   public List<Dog> findByTranspondeur(String transpondeur);
+
+   @Transactional
+   public void deleteById(int id);
 }

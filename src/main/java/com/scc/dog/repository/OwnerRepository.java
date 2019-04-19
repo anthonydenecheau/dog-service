@@ -7,11 +7,12 @@ import org.springframework.transaction.annotation.Transactional;
 import com.scc.dog.model.Owner;
 
 @Repository
-public interface OwnerRepository extends CrudRepository<Owner,String>  {
-	
-	public Owner findById(int id);
-    public Owner findByIdDog(int idDog);
+public interface OwnerRepository extends CrudRepository<Owner, String> {
 
-    @Transactional
-    public void deleteByIdDog(int idDog);
+   public Owner findById(int id);
+
+   public Owner findByIdDog(int idDog);
+
+   @Transactional
+   public void deleteByIdDog(int idDog);
 }

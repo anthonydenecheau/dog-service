@@ -17,26 +17,25 @@ import com.scc.dog.services.PedigreeService;
 @RestController
 public class PedigreeController {
 
-	@Autowired
-    private PedigreeService pedigreeService;
-	
-	
-    @RequestMapping(value="/v2/pedigrees/{id}",method = RequestMethod.PUT)
-    public void updatePedigree( @PathVariable("id") long id, @RequestBody Pedigree pedigree) {
-    	Instant instant = Instant.now();
-    	pedigreeService.save(pedigree, instant.toEpochMilli());
-    }
+   @Autowired
+   private PedigreeService pedigreeService;
 
-    @RequestMapping(value="/v2/pedigrees/",method = RequestMethod.POST)
-    public void savePedigree(@RequestBody Pedigree pedigree) {
-    	Instant instant = Instant.now();
-    	pedigreeService.save(pedigree, instant.toEpochMilli());
-    }
+   @RequestMapping(value = "/v2/pedigrees/{id}", method = RequestMethod.PUT)
+   public void updatePedigree(@PathVariable("id") long id, @RequestBody Pedigree pedigree) {
+      Instant instant = Instant.now();
+      pedigreeService.save(pedigree, instant.toEpochMilli());
+   }
 
-    @RequestMapping(value="/v2/pedigrees/{id}",method = RequestMethod.DELETE)
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deletePedigree( @PathVariable("id") long id) {
-    	pedigreeService.deleteById(id);
-    }
-    
+   @RequestMapping(value = "/v2/pedigrees/", method = RequestMethod.POST)
+   public void savePedigree(@RequestBody Pedigree pedigree) {
+      Instant instant = Instant.now();
+      pedigreeService.save(pedigree, instant.toEpochMilli());
+   }
+
+   @RequestMapping(value = "/v2/pedigrees/{id}", method = RequestMethod.DELETE)
+   @ResponseStatus(HttpStatus.NO_CONTENT)
+   public void deletePedigree(@PathVariable("id") long id) {
+      pedigreeService.deleteById(id);
+   }
+
 }
