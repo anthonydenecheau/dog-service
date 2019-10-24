@@ -48,8 +48,11 @@ public class DogObject {
    @ApiModelProperty(notes = "Dog titles", position = 13, allowEmptyValue = true)
    private List<TitleObject> titles;
 
-//   @ApiModelProperty(notes = "Dog permissions to working class", position = 14, allowEmptyValue = true)
-//   private String workingClassPermit;
+   @ApiModelProperty(notes = "Dog permissions to working class national", position = 14, allowEmptyValue = true)
+   private String workingNationalClassPermit;
+
+   @ApiModelProperty(notes = "Dog permissions to working class international", position = 14, allowEmptyValue = true)
+   private String workingInternationalClassPermit;
 
    @JsonIgnore
    private String nom;
@@ -177,14 +180,21 @@ public class DogObject {
       this.affixe = affixe;
    }
 
-   
-//   public String getWorkingClassPermit() {
-//      return workingClassPermit;
-//   }
-//
-//   public void setWorkingClassPermit(String workingClassPermit) {
-//      this.workingClassPermit = workingClassPermit;
-//   }
+   public String getWorkingNationalClassPermit() {
+      return workingNationalClassPermit;
+   }
+
+   public void setWorkingNationalClassPermit(String workingNationalClassPermit) {
+      this.workingNationalClassPermit = workingNationalClassPermit;
+   }
+
+   public String getWorkingInternationalClassPermit() {
+      return workingInternationalClassPermit;
+   }
+
+   public void setWorkingInternationalClassPermit(String workingInternationalClassPermit) {
+      this.workingInternationalClassPermit = workingInternationalClassPermit;
+   }
    
    public DogObject withId(int id) {
       this.setId(id);
@@ -261,9 +271,14 @@ public class DogObject {
       return this;
    }
 
-//   public DogObject withWorkingClassPermit(String workingClassPermit) {
-//      this.setWorkingClassPermit(workingClassPermit);
-//      return this;
-//   }
+   public DogObject withWorkingNationalClassPermit(String workingNationalClassPermit) {
+      this.setWorkingNationalClassPermit(workingNationalClassPermit);
+      return this;
+   }
+
+   public DogObject withWorkingInternationalClassPermit(String workingInternationalClassPermit) {
+      this.setWorkingInternationalClassPermit(workingInternationalClassPermit);
+      return this;
+   }
 
 }

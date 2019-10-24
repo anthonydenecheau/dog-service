@@ -90,6 +90,8 @@ public class DogService {
 	    			.withBreeder( searchBreeder ( _dog.getId() ))
 	    			.withOwners( searchOwners ( _dog.getId() ))
 	    			.withTitles( searchTitles ( _dog.getId() ))
+	    			.withWorkingNationalClassPermit(_dog.getOnTravailNational())
+	    			.withWorkingInternationalClassPermit(_dog.getOnTravailInternational())
 	    			.withNom( _dog.getNom() )
 	    			.withAffixe( _dog.getAffixe() )
 	    		;
@@ -109,7 +111,8 @@ public class DogService {
     }
 
 
-    @HystrixCommand(fallbackMethod = "buildFallbackDogList",
+    @HystrixCommand(commandKey = "dogservice",
+            fallbackMethod = "buildFallbackDogList",
             threadPoolKey = "dogByTokenThreadPool",
             threadPoolProperties =
                     {@HystrixProperty(name = "coreSize",value="30"),
@@ -152,6 +155,8 @@ public class DogService {
 	    			.withBreeder( searchBreeder ( _dog.getId() ))
 	    			.withOwners( searchOwners ( _dog.getId() ))
 	    			.withTitles( searchTitles ( _dog.getId() ))
+               .withWorkingNationalClassPermit(_dog.getOnTravailNational())
+               .withWorkingInternationalClassPermit(_dog.getOnTravailInternational())
 	    			.withNom( _dog.getNom() )
 	    			.withAffixe( _dog.getAffixe() )
     		)
@@ -375,7 +380,7 @@ public class DogService {
     @SuppressWarnings("unused")
 	private ResponseObjectList<DogObject> buildFallbackDogList(String token){
 
-    	logger.debug("In the dogService.buildFallbackDogList() call");
+    	logger.warn("In the dogService.buildFallbackDogList() call");
 
     	List<DogObject> list = new ArrayList<DogObject>(); 
     	list.add(new DogObject()

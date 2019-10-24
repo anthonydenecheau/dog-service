@@ -69,8 +69,11 @@ public class Dog {
    @Column(name = "date_maj")
    private Timestamp timestamp;
 
-   //@Column(name = "on_travail")
-   //private String onTravail;
+   @Column(name = "on_travail_nat")
+   private String onTravailNational;
+
+   @Column(name = "on_travail_int")
+   private String onTravailInternational;
 
    public int getId() {
       return id;
@@ -216,14 +219,22 @@ public class Dog {
       this.idLice = idLice;
    }
 
-//   public String getOnTravail() {
-//      return onTravail;
-//   }
+   public String getOnTravailNational() {
+      return onTravailNational;
+   }
 
-//   public void setOnTravail(String onTravail) {
-//      this.onTravail = onTravail;
-//   }
+   public void setOnTravailNational(String onTravailNational) {
+      this.onTravailNational = onTravailNational;
+   }
 
+   public String getOnTravailInternational() {
+      return onTravailInternational;
+   }
+
+   public void setOnTravailInternational(String onTravailInternational) {
+      this.onTravailInternational = onTravailInternational;
+   }
+   
    public Timestamp getTimestamp() {
       return timestamp;
    }

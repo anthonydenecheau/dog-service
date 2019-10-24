@@ -5,6 +5,10 @@ spring:
     active:
       default
   cloud:
+    #https://github.com/spring-cloud/spring-cloud-netflix/issues/788
+    #inetutils:
+    #  ignoredInterfaces:
+    #    - tun.*  
     config:
       enabled: true
       
