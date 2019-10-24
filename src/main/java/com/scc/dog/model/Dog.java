@@ -333,10 +333,15 @@ public class Dog {
       return this;
    }
 
-//   public Dog withOnTravail(String onTravail) {
-//      this.setOnTravail(onTravail);
-//      return this;
-//   }
+   public Dog withOnTravailNational(String onTravailNational) {
+      this.setOnTravailNational(onTravailNational);
+      return this;
+   }
+
+   public Dog withOnTravailInternational(String onTravailInternational) {
+      this.setOnTravailInternational(onTravailInternational);
+      return this;
+   }
 
    public Dog withTimestamp(Timestamp timestamp) {
       this.setTimestamp(timestamp);
@@ -349,7 +354,8 @@ public class Dog {
             + dateNaissance + ", pays=" + pays + ", tatouage=" + tatouage + ", transpondeur=" + transpondeur
             + ", codeFci=" + codeFci + ", idRace=" + idRace + ", idVariete=" + idVariete + ", race=" + race
             + ", variete=" + variete + ", couleur=" + couleur + ", couleurAbr=" + couleurAbr + ", inscriptionCode="
-            + inscriptionCode + ", idEtalon=" + idEtalon + ", idLice=" + idLice //+ ", onTravail=" + onTravail
+            + inscriptionCode + ", idEtalon=" + idEtalon + ", idLice=" + idLice + ", onTravailNational=" + onTravailNational 
+            + ", onTravailInternational=" + onTravailInternational
             + ", timestamp=" + timestamp + "]";
    }
 
