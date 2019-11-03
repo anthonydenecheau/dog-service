@@ -484,6 +484,8 @@ public class DogService {
 		    			.withInscriptionCode(syncDog.getInscriptionCode())
 		    			.withIdEtalon(syncDog.getIdEtalon())
 		    			.withIdLice(syncDog.getIdLice())
+		    			.withOnTravailNational(syncDog.getOnTravailNational())
+		    			.withOnTravailInternational(syncDog.getOnTravailInternational())
 		    			.withTimestamp(new Timestamp(timestamp))
 		    		;
 		    		
