@@ -69,8 +69,11 @@ public class Dog {
    @Column(name = "date_maj")
    private Timestamp timestamp;
 
-   //@Column(name = "on_travail")
-   //private String onTravail;
+   @Column(name = "on_travail_nat")
+   private String onTravailNational;
+
+   @Column(name = "on_travail_int")
+   private String onTravailInternational;
 
    public int getId() {
       return id;
@@ -216,14 +219,22 @@ public class Dog {
       this.idLice = idLice;
    }
 
-//   public String getOnTravail() {
-//      return onTravail;
-//   }
+   public String getOnTravailNational() {
+      return onTravailNational;
+   }
 
-//   public void setOnTravail(String onTravail) {
-//      this.onTravail = onTravail;
-//   }
+   public void setOnTravailNational(String onTravailNational) {
+      this.onTravailNational = onTravailNational;
+   }
 
+   public String getOnTravailInternational() {
+      return onTravailInternational;
+   }
+
+   public void setOnTravailInternational(String onTravailInternational) {
+      this.onTravailInternational = onTravailInternational;
+   }
+   
    public Timestamp getTimestamp() {
       return timestamp;
    }
@@ -322,10 +333,15 @@ public class Dog {
       return this;
    }
 
-//   public Dog withOnTravail(String onTravail) {
-//      this.setOnTravail(onTravail);
-//      return this;
-//   }
+   public Dog withOnTravailNational(String onTravailNational) {
+      this.setOnTravailNational(onTravailNational);
+      return this;
+   }
+
+   public Dog withOnTravailInternational(String onTravailInternational) {
+      this.setOnTravailInternational(onTravailInternational);
+      return this;
+   }
 
    public Dog withTimestamp(Timestamp timestamp) {
       this.setTimestamp(timestamp);
@@ -338,7 +354,8 @@ public class Dog {
             + dateNaissance + ", pays=" + pays + ", tatouage=" + tatouage + ", transpondeur=" + transpondeur
             + ", codeFci=" + codeFci + ", idRace=" + idRace + ", idVariete=" + idVariete + ", race=" + race
             + ", variete=" + variete + ", couleur=" + couleur + ", couleurAbr=" + couleurAbr + ", inscriptionCode="
-            + inscriptionCode + ", idEtalon=" + idEtalon + ", idLice=" + idLice //+ ", onTravail=" + onTravail
+            + inscriptionCode + ", idEtalon=" + idEtalon + ", idLice=" + idLice + ", onTravailNational=" + onTravailNational 
+            + ", onTravailInternational=" + onTravailInternational
             + ", timestamp=" + timestamp + "]";
    }
 
