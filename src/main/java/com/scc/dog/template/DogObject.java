@@ -54,6 +54,9 @@ public class DogObject {
    @ApiModelProperty(notes = "Dog permissions to working class international", position = 14, allowEmptyValue = true)
    private String workingInternationalClassPermit;
 
+   @ApiModelProperty(notes = "Dog Date of Decease", position = 15, allowEmptyValue = true)
+   private String deceasedDate;
+
    @JsonIgnore
    private String nom;
 
@@ -195,6 +198,15 @@ public class DogObject {
    public void setWorkingInternationalClassPermit(String workingInternationalClassPermit) {
       this.workingInternationalClassPermit = workingInternationalClassPermit;
    }
+
+   public String getDeceasedDate() {
+      return deceasedDate;
+   }
+
+   public void setDeceasedDate(String deceasedDate) {
+      this.deceasedDate = deceasedDate;
+   }
+
    
    public DogObject withId(int id) {
       this.setId(id);
@@ -280,5 +292,11 @@ public class DogObject {
       this.setWorkingInternationalClassPermit(workingInternationalClassPermit);
       return this;
    }
+   
+   public DogObject withDeceasedDate(String deceasedDate) {
+      this.setDeceasedDate(deceasedDate);
+      return this;
+   }
+
 
 }

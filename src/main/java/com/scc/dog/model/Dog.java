@@ -27,6 +27,9 @@ public class Dog {
    @Column(name = "date_naissance")
    private String dateNaissance;
 
+   @Column(name = "date_deces")
+   private String dateDeces;
+
    @Column(name = "pays")
    private String pays;
 
@@ -113,6 +116,14 @@ public class Dog {
 
    public void setDateNaissance(String dateNaissance) {
       this.dateNaissance = dateNaissance;
+   }
+
+   public String getDateDeces() {
+      return dateDeces;
+   }
+
+   public void setDateDeces(String dateDeces) {
+      this.dateDeces = dateDeces;
    }
 
    public String getPays() {
@@ -268,6 +279,11 @@ public class Dog {
       return this;
    }
 
+   public Dog withDateDeces(String dateDeces) {
+      this.setDateDeces(dateDeces);
+      return this;
+   }
+
    public Dog withPays(String pays) {
       this.setPays(pays);
       return this;
@@ -351,7 +367,7 @@ public class Dog {
    @Override
    public String toString() {
       return "Dog [id=" + id + ", nom=" + nom + ", affixe=" + affixe + ", sexe=" + sexe + ", dateNaissance="
-            + dateNaissance + ", pays=" + pays + ", tatouage=" + tatouage + ", transpondeur=" + transpondeur
+            + dateNaissance + ", dateDeces=" + dateDeces  + ", pays=" + pays + ", tatouage=" + tatouage + ", transpondeur=" + transpondeur
             + ", codeFci=" + codeFci + ", idRace=" + idRace + ", idVariete=" + idVariete + ", race=" + race
             + ", variete=" + variete + ", couleur=" + couleur + ", couleurAbr=" + couleurAbr + ", inscriptionCode="
             + inscriptionCode + ", idEtalon=" + idEtalon + ", idLice=" + idLice + ", onTravailNational=" + onTravailNational 
