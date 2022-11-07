@@ -70,6 +70,9 @@ public class DogServiceV1 {
 
       Span newSpan = tracer.createSpan("getDogByToken");
       logger.debug("In the dogService.getDogByToken() call, trace id: {}", tracer.getCurrentSpan().traceIdString());
+      
+      List<DogObject> dogs = new ArrayList<DogObject>();
+      
       try {
          /*
           * norme ISO (FDXB) = 15 chiffres
@@ -83,7 +86,6 @@ public class DogServiceV1 {
 
          // Pour conserver le timestamp lors de la maj via message (@JsonIgnore impossible s/ timestamp sinon timestamp == null)
          // nous sommes obligés de passer par une classe intermédiaire DogObject
-         List<DogObject> dogs = new ArrayList<DogObject>();
          for (Dog dog : list) {
             dogs.add((DogObject) new DogObject().withId(dog.getId()).withNom(dog.getNom()).withSexe(dog.getSexe())
                   .withDateNaissance(formatDtNaissance(dog.getDateNaissance()))
@@ -91,17 +93,19 @@ public class DogServiceV1 {
                   .withTranspondeur(dog.getTranspondeur()).withRace(dog.getRace())
                   .withVariete(buildVariete(dog.getCodeFci(), dog.getVariete())).withCouleur(dog.getCouleurAbr()));
          }
-
          list.clear();
 
-         return new ResponseObjectList<DogObject>(dogs.size(), dogs);
+      } catch (Exception e) {
+         logger.error("getDogByToken (V1) {}", e.getMessage());
       } finally {
 
          newSpan.tag("peer.service", "postgres");
          newSpan.logEvent(org.springframework.cloud.sleuth.Span.CLIENT_RECV);
          tracer.close(newSpan);
       }
-   }
+
+      return new ResponseObjectList<DogObject>(dogs.size(), dogs);
+  }
 
    private ResponseObjectList<DogObject> buildFallbackDogList(String token) {
 

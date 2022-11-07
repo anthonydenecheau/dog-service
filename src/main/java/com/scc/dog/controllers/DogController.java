@@ -45,7 +45,7 @@ public class DogController {
          @ApiParam(value = "token (chip or tatoo)", required = true) @PathVariable("token") String token) {
       return dogService.getDogByToken(token);
    }
-
+   
    @ApiOperation(value = "View dog information by id", response = DogObject.class)
    @ApiResponses(value = { @ApiResponse(code = 200, message = "Successfully retrieved dog"),
          @ApiResponse(code = 401, message = "You are not authorized to view the resource"),

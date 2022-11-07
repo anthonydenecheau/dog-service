@@ -97,14 +97,14 @@ public class UserContextFilter implements Filter {
          //			System.out.println(matcher.group(1));
          switch (matcher.group(1)) {
          case "1":
-            // Agria = cle + v1 uniquement
-            if (position != 1) {
+            // Agria + MyPacs = cle + v1 uniquement
+            if (position != 1 && position != 5) {
                ok = false;
             }
             break;
          case "2":
-            // Ods/Enci = cle + v2 uniquement
-            if (position == 1) {
+            // Ods/SccExpos = cle + v2 uniquement
+            if (position == 1 || position == 5) {
                ok = false;
             }
             break;
